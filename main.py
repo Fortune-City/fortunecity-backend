@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import FastAPI, Depends, HTTPException, status, Form, File, UploadFile
+from typing import Optional, List
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
 from datetime import datetime
 from database import engine, get_db
@@ -11,7 +12,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Create tables
 models.Base.metadata.create_all(bind=engine)
@@ -132,6 +133,12 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
+@app.get("/me", response_model=schemas.UserResponse)
+def get_current_user_info(current_user: models.User = Depends(get_current_user)):
+    """Get current authenticated user's information"""
+    return current_user
+
+
 @app.post("/users", response_model=schemas.UserResponse)
 def create_user(user: schemas.UserCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     # Only admin can create users
@@ -149,11 +156,16 @@ def create_user(user: schemas.UserCreate, current_user: models.User = Depends(ge
     db_user = db.query(models.User).filter(models.User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    
+    # Set default nickname for admin users if not provided
+    nickname = user.nickname
+    if not nickname and user.role == "admin":
+        nickname = "Admin"
         
     hashed_password = get_password_hash(user.password)
     new_user = models.User(
         username=user.username, 
-        nickname=user.nickname,
+        nickname=nickname,
         hashed_password=hashed_password, 
         role=user.role
     )
@@ -316,8 +328,10 @@ def create_blog_post(post: schemas.BlogPostCreate, current_user: models.User = D
         content=post.content,
         excerpt=post.excerpt,
         featured_image=post.featured_image,
+        featured_image_alt=post.featured_image_alt,
         status=post.status,
         slug=post.slug,
+        seo_data=post.seo,
         author_id=current_user.id,
         created_at=post.created_at if post.created_at else datetime.utcnow()
     )
@@ -357,6 +371,11 @@ def update_blog_post(post_id: int, post_update: schemas.BlogPostUpdate, current_
         raise HTTPException(status_code=404, detail="Post not found")
         
     update_data = post_update.dict(exclude_unset=True)
+    
+    # Map 'seo' field to 'seo_data' for database
+    if 'seo' in update_data:
+        update_data['seo_data'] = update_data.pop('seo')
+    
     for key, value in update_data.items():
         setattr(db_post, key, value)
              
@@ -376,3 +395,340 @@ def delete_blog_post(post_id: int, current_user: models.User = Depends(get_curre
     db.delete(post)
     db.commit()
     return None
+
+# ==================== COMMENT ENDPOINTS ====================
+
+@app.post("/posts/{post_id}/comments", response_model=schemas.CommentResponse, status_code=status.HTTP_201_CREATED)
+def create_comment(post_id: int, comment: schemas.CommentCreate, db: Session = Depends(get_db)):
+    """Submit a new comment on a blog post (public endpoint)"""
+    # Verify post exists
+    post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    
+    # Create comment with pending status
+    new_comment = models.Comment(
+        post_id=post_id,
+        name=comment.name,
+        email=comment.email,
+        phone_number=comment.phone_number,
+        message=comment.message,
+        status="pending"
+    )
+    
+    db.add(new_comment)
+    db.commit()
+    db.refresh(new_comment)
+    return new_comment
+
+@app.get("/posts/{post_id}/comments", response_model=List[schemas.CommentResponse])
+def get_post_comments(post_id: int, db: Session = Depends(get_db)):
+    """Get all approved comments for a blog post (public endpoint)"""
+    comments = db.query(models.Comment).filter(
+        models.Comment.post_id == post_id,
+        models.Comment.status == "approved"
+    ).order_by(models.Comment.created_at.desc()).all()
+    
+    return comments
+
+@app.get("/admin/comments", response_model=List[schemas.CommentResponse])
+def get_all_comments(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Get all comments for admin (requires authentication)"""
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    comments = db.query(models.Comment).options(joinedload(models.Comment.post)).order_by(models.Comment.created_at.desc()).all()
+    return comments
+
+@app.put("/admin/comments/{comment_id}/approve", response_model=schemas.CommentResponse)
+def approve_comment(comment_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Approve a comment (requires authentication)"""
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    comment.status = "approved"
+    db.commit()
+    db.refresh(comment)
+    return comment
+
+@app.delete("/admin/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_comment(comment_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Delete a comment (requires authentication)"""
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    db.delete(comment)
+    db.commit()
+    return None
+
+from fastapi import Response
+
+@app.get("/sitemap.xml")
+def get_sitemap(db: Session = Depends(get_db)):
+    """Generate dynamic sitemap.xml"""
+    base_url = "https://fortunemill.com" # Update this with your actual domain
+    
+    # Static pages
+    static_pages = [
+        {"loc": f"{base_url}/", "changefreq": "daily", "priority": "1.0"},
+        {"loc": f"{base_url}/about", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/contact", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/blog", "changefreq": "daily", "priority": "0.9"},
+    ]
+    
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    # Add static pages
+    for page in static_pages:
+        xml_content += '  <url>\n'
+        xml_content += f'    <loc>{page["loc"]}</loc>\n'
+        xml_content += f'    <changefreq>{page["changefreq"]}</changefreq>\n'
+        xml_content += f'    <priority>{page["priority"]}</priority>\n'
+        xml_content += '  </url>\n'
+    
+    # Add blog posts
+    posts = db.query(models.BlogPost).filter(models.BlogPost.status == 'published').all()
+    for post in posts:
+        last_mod = post.created_at.strftime("%Y-%m-%d")
+        xml_content += '  <url>\n'
+        xml_content += f'    <loc>{base_url}/blog/{post.slug}</loc>\n'
+        xml_content += f'    <lastmod>{last_mod}</lastmod>\n'
+        xml_content += '    <changefreq>weekly</changefreq>\n'
+        xml_content += '    <priority>0.7</priority>\n'
+        xml_content += '  </url>\n'
+        
+    xml_content += '</urlset>'
+    
+    return Response(content=xml_content, media_type="application/xml")
+
+# ==================== CLOUDINARY UPLOAD & MEDIA MANAGER ====================
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from fastapi import File, UploadFile
+
+# Cloudinary config moved inside endpoint for hot-reload support or helper
+def get_cloudinary_config():
+    cloudinary.config(
+        cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key=os.getenv("CLOUDINARY_API_KEY"),
+        api_secret=os.getenv("CLOUDINARY_API_SECRET")
+    )
+
+@app.get("/media/images")
+def get_images(current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    get_cloudinary_config()
+    
+    try:
+        # Fetch images from specific folder
+        # Note: listing resources might require Admin API enabled on Cloudinary console
+        result = cloudinary.api.resources(
+            type="upload",
+            prefix="fortune-city/blogs", 
+            max_results=100
+        )
+        return result.get("resources", [])
+    except Exception as e:
+        # Log error for debugging
+        print(f"Cloudinary error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch images: {str(e)}")
+
+@app.delete("/media/images/{public_id:path}")
+def delete_image(public_id: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    get_cloudinary_config()
+    
+    try:
+        # 1. Cascade Nullification: 
+        # Instead of blocking, we automatically clear this image from all Blog Posts 
+        # so you don't end up with broken/ghost images.
+        db.query(models.BlogPost).filter(
+            models.BlogPost.featured_image.like(f"%{public_id}%")
+        ).update({models.BlogPost.featured_image: None}, synchronize_session=False)
+        
+        # Also clear from user profiles if used there
+        db.query(models.User).filter(
+            models.User.profile_image_public_id == public_id
+        ).update({
+            models.User.profile_image: None, 
+            models.User.profile_image_public_id: None
+        }, synchronize_session=False)
+        
+        db.commit()
+
+        # 2. Delete from Cloudinary with full invalidation
+        result = cloudinary.uploader.destroy(public_id, invalidate=True)
+        
+        return {
+            "message": "Image deleted and references cleared", 
+            "cloud_result": result.get("result")
+        }
+        
+    except Exception as e:
+        db.rollback()
+        print(f"Delete Error for {public_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
+
+@app.post("/media/crop")
+def crop_image(
+    public_id: str = Form(...),
+    image_url: str = Form(...),
+    x: int = Form(...),
+    y: int = Form(...),
+    width: int = Form(...),
+    height: int = Form(...),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Perform server-side crop using Cloudinary transformation and overwrite the original."""
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    get_cloudinary_config()
+    
+    try:
+        # This is extremely fast as Cloudinary handles the fetch and crop on their end
+        result = cloudinary.uploader.upload(
+            image_url,
+            public_id=public_id,
+            overwrite=True,
+            transformation=[{
+                "x": x,
+                "y": y,
+                "width": width,
+                "height": height,
+                "crop": "crop"
+            }]
+        )
+        return {
+            "public_id": result.get("public_id"),
+            "secure_url": result.get("secure_url"),
+            "width": result.get("width"),
+            "height": result.get("height"),
+            "format": result.get("format"),
+            "bytes": result.get("bytes"),
+            "created_at": result.get("created_at")
+        }
+    except Exception as e:
+        print(f"Crop Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Server-side crop failed: {str(e)}")
+
+@app.post("/user/profile-image")
+def upload_profile_image(
+    file: UploadFile = File(...), 
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Upload a profile image to Cloudinary and update user record."""
+    get_cloudinary_config()
+    
+    try:
+        # 1. Delete old image if exists
+        if current_user.profile_image_public_id:
+            try:
+                cloudinary.uploader.destroy(current_user.profile_image_public_id)
+            except Exception as e:
+                print(f"Error deleting old profile image: {e}")
+        
+        # 2. Upload new image to profile-img folder
+        result = cloudinary.uploader.upload(file.file, folder="fortune-city/profile-img")
+        
+        # 3. Update database
+        current_user.profile_image = result.get("secure_url")
+        current_user.profile_image_public_id = result.get("public_id")
+        db.commit()
+        db.refresh(current_user)
+        
+        return {
+            "profile_image": current_user.profile_image,
+            "username": current_user.username
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Profile image update failed: {str(e)}")
+
+@app.delete("/user/profile-image")
+def delete_profile_image(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Remove profile image from Cloudinary and clear user record."""
+    if not current_user.profile_image_public_id:
+        raise HTTPException(status_code=400, detail="No profile image to remove")
+    
+    get_cloudinary_config()
+    
+    try:
+        # 1. Delete from Cloudinary
+        cloudinary.uploader.destroy(current_user.profile_image_public_id)
+        
+        # 2. Clear database fields
+        current_user.profile_image = None
+        current_user.profile_image_public_id = None
+        db.commit()
+        db.refresh(current_user)
+        
+        return {"message": "Profile image removed successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to remove image: {str(e)}")
+
+import hashlib
+
+@app.post("/upload")
+def upload_image(
+    file: UploadFile = File(...), 
+    public_id: Optional[str] = Form(None),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Upload an image to Cloudinary with automatic deduplication by content hashing."""
+    if current_user.role not in ["admin", "editor"]:
+        raise HTTPException(status_code=403, detail="Not authorized to upload files")
+    
+    get_cloudinary_config()
+    
+    try:
+        # Read file content for hashing
+        file_content = file.file.read()
+        file.file.seek(0) # Reset to start for upload
+        
+        # 1. Deduplication: Use MD5 hash as public_id if none provided
+        if not public_id:
+            file_hash = hashlib.md5(file_content).hexdigest()
+            # We prefix with hash but keep it in the blogs folder
+            # Cloudinary handles overwrite=True with the same public_id
+            target_public_id = f"fortune-city/blogs/{file_hash}"
+        else:
+            target_public_id = public_id
+
+        upload_params = {
+            "public_id": target_public_id,
+            "overwrite": True,
+            "resource_type": "auto"
+        }
+
+        result = cloudinary.uploader.upload(file.file, **upload_params)
+        
+        return {
+            "public_id": result.get("public_id"),
+            "secure_url": result.get("secure_url"),
+            "width": result.get("width"),
+            "height": result.get("height"),
+            "format": result.get("format"),
+            "bytes": result.get("bytes"),
+            "created_at": result.get("created_at")
+        }
+    except Exception as e:
+        print(f"Upload Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
