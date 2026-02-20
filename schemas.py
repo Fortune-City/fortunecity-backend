@@ -126,3 +126,90 @@ class SubscriberResponse(SubscriberBase):
 
     class Config:
         from_attributes = True
+
+# Gallery Schemas
+class GalleryItemBase(BaseModel):
+    type: str = "photo" # photo, video
+    url: str
+    public_id: Optional[str] = None
+    thumbnail_url: Optional[str] = None # For videos
+    title: Optional[str] = None
+
+class GalleryItemCreate(GalleryItemBase):
+    pass
+
+class GalleryItemUpdate(BaseModel):
+    title: Optional[str] = None
+    url: Optional[str] = None
+    public_id: Optional[str] = None
+    crop_data: Optional[dict] = None # {x, y, width, height}
+
+class GalleryItemResponse(GalleryItemBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Event Schemas
+class EventBase(BaseModel):
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    description: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    start_time: Optional[str] = None
+    end_time: Optional[str] = None
+    featured_image: Optional[str] = None
+    date: Optional[str] = None
+    time: Optional[str] = None
+    location: Optional[str] = None
+    address: Optional[str] = None
+    map_url: Optional[str] = None
+    featured_image_public_id: Optional[str] = None
+    organizer_name: Optional[str] = None
+    organizer_phone: Optional[str] = None
+    organizer_email: Optional[str] = None
+    category: Optional[str] = "ENTERTAINMENT"
+    order: Optional[int] = 0
+
+class EventCreate(EventBase):
+    title: str
+    description: str
+    start_date: str
+    end_date: str
+    featured_image: str
+
+class EventUpdate(BaseModel):
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    description: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    start_time: Optional[str] = None
+    end_time: Optional[str] = None
+    featured_image: Optional[str] = None
+    date: Optional[str] = None
+    time: Optional[str] = None
+    location: Optional[str] = None
+    address: Optional[str] = None
+    map_url: Optional[str] = None
+    featured_image_public_id: Optional[str] = None
+    organizer_name: Optional[str] = None
+    organizer_phone: Optional[str] = None
+    organizer_email: Optional[str] = None
+    category: Optional[str] = None
+
+class EventResponse(EventBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class DashboardStats(BaseModel):
+    total_posts: int
+    published_posts: int
+    total_events: int
+    total_subscribers: int
+    total_enquiries: int

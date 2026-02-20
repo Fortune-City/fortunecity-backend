@@ -68,3 +68,40 @@ class Subscriber(Base):
     email = Column(String, unique=True, index=True)
     phone = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class GalleryItem(Base):
+    __tablename__ = "gallery_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    type = Column(String, default="photo")  # photo, video
+    url = Column(String, nullable=False)    # Cloudinary URL or Video Link
+    public_id = Column(String, nullable=True) # Cloudinary Public ID
+    thumbnail_url = Column(String, nullable=True) # For videos
+    title = Column(String, nullable=True)
+    order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Event(Base):
+    __tablename__ = "events"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    slug = Column(String, unique=True, index=True)
+    description = Column(Text, nullable=True)
+    date = Column(String, nullable=True) # Keeping for backward compatibility if needed
+    start_date = Column(String, nullable=True)
+    end_date = Column(String, nullable=True)
+    start_time = Column(String, nullable=True)
+    end_time = Column(String, nullable=True)
+    time = Column(String, nullable=True)
+    location = Column(String, nullable=True)
+    address = Column(Text, nullable=True)
+    map_url = Column(Text, nullable=True)
+    featured_image = Column(String, nullable=True)
+    featured_image_public_id = Column(String, nullable=True)
+    organizer_name = Column(String, nullable=True)
+    organizer_phone = Column(String, nullable=True)
+    organizer_email = Column(String, nullable=True)
+    category = Column(String, default="ENTERTAINMENT")
+    order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)

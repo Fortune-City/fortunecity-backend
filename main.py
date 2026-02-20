@@ -10,7 +10,12 @@ from auth_utils import verify_password, get_password_hash, create_access_token
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import os
+import traceback
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
+import asyncio
+import re
 
 load_dotenv(override=True)
 
@@ -45,7 +50,7 @@ app.add_middleware(
 )
 
 @app.on_event("startup")
-def startup_db_client():
+async def startup_db_client():
     # Seed Admin User if not exists
     db = next(get_db())
     try:
@@ -67,6 +72,75 @@ def startup_db_client():
         print(f"System: Error seeding database: {e}")
     finally:
         db.close()
+    
+    # Start background cleanup task for expired events
+    print("System: Launching event cleanup background task...")
+    asyncio.create_task(cleanup_expired_events_task())
+
+# Configure Cloudinary globally once
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
+
+def get_cloudinary_config():
+    """Redundant now, but kept for compatibility with existing code if needed."""
+    pass
+
+async def cleanup_expired_events_task():
+    """Background task to remove events that have already passed their end time."""
+    print("System: Event cleanup background task started.")
+    while True:
+        try:
+            from database import SessionLocal
+            import models
+            from datetime import datetime
+            import cloudinary.uploader
+            
+            db = SessionLocal()
+            try:
+                # Use current local time for comparison since dates in DB are local strings
+                now = datetime.now()
+                events = db.query(models.Event).all()
+                deleted_count = 0
+                
+                for event in events:
+                    if not event.end_date:
+                        continue
+                        
+                    try:
+                        # Parse date and time (default to 11:59 PM if no end_time)
+                        time_str = event.end_time if event.end_time else "11:59 PM"
+                        # Expecting format like '22-02-2026 11:46 PM'
+                        end_dt = datetime.strptime(f"{event.end_date} {time_str}", "%d-%m-%Y %I:%M %p")
+                        
+                        if now > end_dt:
+                            print(f"Cleanup: Event '{event.title}' (ID: {event.id}) expired on {end_dt}. Deleting...")
+                            
+                            # Delete image from Cloudinary if it exists
+                            if event.featured_image_public_id:
+                                try:
+                                    cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
+                                except Exception as ce:
+                                    print(f"Cleanup: Cloudinary deletion failed for {event.featured_image_public_id}: {ce}")
+                            
+                            db.delete(event)
+                            deleted_count += 1
+                    except Exception as parse_err:
+                        # Skip if date format is invalid or can't be parsed
+                        continue
+                
+                if deleted_count > 0:
+                    db.commit()
+                    print(f"Cleanup: Successfully removed {deleted_count} expired events.")
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"Cleanup Error: {e}")
+            
+        # Run every 600 seconds (10 minutes)
+        await asyncio.sleep(600)
 
 @app.get("/")
 def read_root():
@@ -470,7 +544,7 @@ def get_post_comments(post_id: int, db: Session = Depends(get_db)):
 @app.get("/admin/comments", response_model=List[schemas.CommentResponse])
 def get_all_comments(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get all comments for admin (requires authentication)"""
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     comments = db.query(models.Comment).options(joinedload(models.Comment.post)).order_by(models.Comment.created_at.desc()).all()
@@ -479,7 +553,7 @@ def get_all_comments(current_user: models.User = Depends(get_current_user), db: 
 @app.put("/admin/comments/{comment_id}/approve", response_model=schemas.CommentResponse)
 def approve_comment(comment_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Approve a comment (requires authentication)"""
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
@@ -494,7 +568,7 @@ def approve_comment(comment_id: int, current_user: models.User = Depends(get_cur
 @app.delete("/admin/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_comment(comment_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Delete a comment (requires authentication)"""
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
@@ -552,24 +626,15 @@ import cloudinary.uploader
 import cloudinary.api
 from fastapi import File, UploadFile
 
-# Cloudinary config moved inside endpoint for hot-reload support or helper
-def get_cloudinary_config():
-    cloudinary.config(
-        cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-        api_key=os.getenv("CLOUDINARY_API_KEY"),
-        api_secret=os.getenv("CLOUDINARY_API_SECRET")
-    )
+
 
 @app.get("/media/images")
 def get_images(current_user: models.User = Depends(get_current_user)):
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
-    get_cloudinary_config()
     
     try:
         # Fetch images from specific folder
-        # Note: listing resources might require Admin API enabled on Cloudinary console
         result = cloudinary.api.resources(
             type="upload",
             prefix="fortune-city/blogs", 
@@ -583,7 +648,7 @@ def get_images(current_user: models.User = Depends(get_current_user)):
 
 @app.delete("/media/images/{public_id:path}")
 def delete_image(public_id: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     get_cloudinary_config()
@@ -603,7 +668,15 @@ def delete_image(public_id: str, current_user: models.User = Depends(get_current
             models.User.profile_image: None, 
             models.User.profile_image_public_id: None
         }, synchronize_session=False)
-        
+
+        # Also clear from Events if used there
+        db.query(models.Event).filter(
+            models.Event.featured_image_public_id == public_id
+        ).update({
+            models.Event.featured_image: None,
+            models.Event.featured_image_public_id: None
+        }, synchronize_session=False)
+
         db.commit()
 
         # 2. Delete from Cloudinary with full invalidation
@@ -630,7 +703,7 @@ def crop_image(
     current_user: models.User = Depends(get_current_user)
 ):
     """Perform server-side crop using Cloudinary transformation and overwrite the original."""
-    if current_user.role not in ["admin", "editor"]:
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     get_cloudinary_config()
@@ -641,6 +714,7 @@ def crop_image(
             image_url,
             public_id=public_id,
             overwrite=True,
+            invalidate=True,
             transformation=[{
                 "x": x,
                 "y": y,
@@ -680,6 +754,13 @@ def upload_profile_image(
                 print(f"Error deleting old profile image: {e}")
         
         # 2. Upload new image to profile-img folder
+        # Check file size (1MB = 1024 * 1024 bytes)
+        MAX_SIZE = 1 * 1024 * 1024
+        file_content = file.file.read()
+        if len(file_content) > MAX_SIZE:
+             raise HTTPException(status_code=400, detail="File too large. Maximum size is 1MB.")
+        file.file.seek(0)
+        
         result = cloudinary.uploader.upload(file.file, folder="fortune-city/profile-img")
         
         # 3. Update database
@@ -723,38 +804,64 @@ def delete_profile_image(
 import hashlib
 
 @app.post("/upload")
-def upload_image(
+async def upload_image(
     file: UploadFile = File(...), 
     public_id: Optional[str] = Form(None),
+    folder: Optional[str] = Form("blogs"),
     current_user: models.User = Depends(get_current_user)
 ):
-    """Upload an image to Cloudinary with automatic deduplication by content hashing."""
-    if current_user.role not in ["admin", "editor"]:
+    """Upload an image to Cloudinary with automatic deduplication. Optimized for speed and large files."""
+    if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized to upload files")
     
-    get_cloudinary_config()
-    
     try:
-        # Read file content for hashing
-        file_content = file.file.read()
-        file.file.seek(0) # Reset to start for upload
+        # Read file content efficiently
+        file_content = await file.read()
+        await file.seek(0)
         
-        # 1. Deduplication: Use MD5 hash as public_id if none provided
+        is_video = "video" in folder.lower() or file.content_type.startswith("video/")
+        # Images: 2MB, Videos: 50MB (increased slightly for convenience)
+        MAX_SIZE = (50 if is_video else 2) * 1024 * 1024
+        
+        if len(file_content) > MAX_SIZE:
+             size_label = "50MB" if is_video else "2MB"
+             raise HTTPException(status_code=400, detail=f"File too large. Maximum size for {'videos' if is_video else 'images'} is {size_label}.")
+        
+        # Deduplication logic
         if not public_id:
             file_hash = hashlib.md5(file_content).hexdigest()
-            # We prefix with hash but keep it in the blogs folder
-            # Cloudinary handles overwrite=True with the same public_id
-            target_public_id = f"fortune-city/blogs/{file_hash}"
+            base_folder = "fortune-city"
+            final_folder = folder if folder.startswith(base_folder) else f"{base_folder}/{folder}"
+            
+            upload_params = {
+                "public_id": file_hash,
+                "folder": final_folder,
+                "overwrite": True,
+                "resource_type": "auto",
+                "quality": "auto:good", # Automatic quality optimization
+                "fetch_format": "auto"   # Automatic format optimization (webp/avif where supported)
+            }
         else:
-            target_public_id = public_id
+            upload_params = {
+                "public_id": public_id,
+                "overwrite": True,
+                "resource_type": "auto"
+            }
 
-        upload_params = {
-            "public_id": target_public_id,
-            "overwrite": True,
-            "resource_type": "auto"
-        }
-
-        result = cloudinary.uploader.upload(file.file, **upload_params)
+        # Use upload_large for anything over 10MB or videos for better reliability and speed
+        if is_video or len(file_content) > 10 * 1024 * 1024:
+            result = await asyncio.to_thread(
+                cloudinary.uploader.upload_large,
+                file.file,
+                **upload_params,
+                chunk_size=6000000 # 6MB chunks
+            )
+        else:
+            result = await asyncio.to_thread(
+                cloudinary.uploader.upload,
+                file.file,
+                **upload_params
+            )
         
         return {
             "public_id": result.get("public_id"),
@@ -768,3 +875,268 @@ def upload_image(
     except Exception as e:
         print(f"Upload Error: {e}")
         raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
+
+# ==================== GALLERY ENDPOINTS ====================
+
+@app.post("/gallery", response_model=schemas.GalleryItemResponse, status_code=status.HTTP_201_CREATED)
+def create_gallery_item(item: schemas.GalleryItemCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to add gallery items")
+    
+    new_item = models.GalleryItem(
+        type=item.type,
+        url=item.url,
+        public_id=item.public_id,
+        thumbnail_url=item.thumbnail_url,
+        title=item.title
+    )
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
+    return new_item
+
+@app.get("/gallery", response_model=List[schemas.GalleryItemResponse])
+def get_gallery_items(type: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(models.GalleryItem)
+    if type:
+        query = query.filter(models.GalleryItem.type == type)
+    return query.order_by(models.GalleryItem.order.asc(), models.GalleryItem.created_at.desc()).all()
+
+@app.delete("/gallery/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_gallery_item(item_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to delete gallery items")
+    
+    item = db.query(models.GalleryItem).filter(models.GalleryItem.id == item_id).first()
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    
+    # If it's a photo or video upload (has public_id), remove from Cloudinary
+    if item.public_id:
+        get_cloudinary_config()
+        try:
+            # Determine resource_type based on item type
+            resource_type = "video" if item.type == "video" else "image"
+            cloudinary.uploader.destroy(item.public_id, resource_type=resource_type, invalidate=True)
+        except Exception as e:
+            print(f"Error deleting from Cloudinary: {e}")
+            # We continue to delete from DB even if Cloudinary fails, or maybe we should log it
+            
+    db.delete(item)
+    db.commit()
+    return None
+
+@app.put("/gallery/{item_id}", response_model=schemas.GalleryItemResponse)
+def update_gallery_item(
+    item_id: int,
+    item_data: schemas.GalleryItemUpdate, 
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to update gallery items")
+    
+    item = db.query(models.GalleryItem).filter(models.GalleryItem.id == item_id).first()
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    
+    # 1. Update Title / Alt Text
+    if item_data.title is not None:
+        item.title = item_data.title
+    
+    # 2. Handle Server-Side Cropping if provided
+    # Only proceed if crop_data exists and is not empty
+    if item_data.crop_data and len(item_data.crop_data) > 0 and item.public_id:
+        get_cloudinary_config()
+        try:
+            crop = item_data.crop_data
+            # Convert values to int safely
+            cx = int(float(crop.get('x', 0)))
+            cy = int(float(crop.get('y', 0)))
+            cw = int(float(crop.get('width', 100)))
+            ch = int(float(crop.get('height', 100)))
+
+            # Revert to URL but strip versioning (/v123456789/) to avoid "Resource not found" errors
+            import re
+            source_url = item.url
+            # Remove the version string (e.g., /v1771392831/) from the URL if present
+            clean_url = re.sub(r'/v\d+/', '/', source_url)
+
+            result = cloudinary.uploader.upload(
+                clean_url,
+                public_id=item.public_id,
+                overwrite=True,
+                invalidate=True,
+                transformation=[{
+                    "x": cx,
+                    "y": cy,
+                    "width": cw,
+                    "height": ch,
+                    "crop": "crop"
+                }]
+            )
+            item.url = result.get("secure_url")
+            item.public_id = result.get("public_id")
+        except Exception as e:
+            # Enhanced logging for debugging
+            import traceback
+            print(f"--- Gallery Crop Error ---")
+            print(f"Item ID: {item_id}")
+            print(f"Clean URL: {clean_url if 'clean_url' in locals() else 'N/A'}")
+            print(f"Error: {str(e)}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Failed to apply crop: {str(e)}")
+    
+    db.commit()
+    db.refresh(item)
+    return item
+
+@app.post("/gallery/reorder")
+def reorder_gallery(id_order: List[int], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    try:
+        for index, item_id in enumerate(id_order):
+            db.query(models.GalleryItem).filter(models.GalleryItem.id == item_id).update({"order": index})
+        db.commit()
+        return {"message": "Order updated successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== EVENT ENDPOINTS ====================
+
+@app.post("/events", response_model=schemas.EventResponse, status_code=status.HTTP_201_CREATED)
+def create_event(event: schemas.EventCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to create events")
+    
+    event_data = event.dict()
+    if not event_data.get("slug"):
+        # Simple slugification
+        base_slug = re.sub(r'[^\w\s-]', '', event_data["title"].lower())
+        base_slug = re.sub(r'[\s_-]+', '-', base_slug).strip('-')
+        slug = base_slug
+        counter = 1
+        while db.query(models.Event).filter(models.Event.slug == slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        event_data["slug"] = slug
+        
+    new_event = models.Event(**event_data)
+    db.add(new_event)
+    db.commit()
+    db.refresh(new_event)
+    return new_event
+
+@app.get("/events", response_model=List[schemas.EventResponse])
+def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
+    try:
+        query = db.query(models.Event)
+        if category:
+            query = query.filter(models.Event.category == category)
+        events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+        return events
+    except Exception as e:
+        print(f"Error in get_events: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/events/{slug}", response_model=schemas.EventResponse)
+def get_event(slug: str, db: Session = Depends(get_db)):
+    # Try ID first for backward compatibility, then slug
+    event = None
+    if slug.isdigit():
+        event = db.query(models.Event).filter(models.Event.id == int(slug)).first()
+    
+    if not event:
+        event = db.query(models.Event).filter(models.Event.slug == slug).first()
+        
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
+
+@app.put("/events/{event_id}", response_model=schemas.EventResponse)
+def update_event(event_id: int, event_update: schemas.EventUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to update events")
+    
+    db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if not db_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    update_data = event_update.dict(exclude_unset=True)
+    
+    # If a new image is being set, delete the old one from Cloudinary
+    if "featured_image_public_id" in update_data and db_event.featured_image_public_id:
+        if update_data["featured_image_public_id"] != db_event.featured_image_public_id:
+            get_cloudinary_config()
+            try:
+                cloudinary.uploader.destroy(db_event.featured_image_public_id, invalidate=True)
+            except Exception as e:
+                print(f"Error deleting old event image from Cloudinary: {e}")
+
+    for key, value in update_data.items():
+        setattr(db_event, key, value)
+    
+    db.commit()
+    db.refresh(db_event)
+    return db_event
+
+@app.delete("/events/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_event(event_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized to delete events")
+    
+    event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    # Delete image from Cloudinary if exists
+    if event.featured_image_public_id:
+        get_cloudinary_config()
+        try:
+            cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
+        except Exception as e:
+            print(f"Error deleting event image from Cloudinary: {e}")
+            
+    db.delete(event)
+    db.commit()
+    return None
+
+@app.get("/admin/stats", response_model=schemas.DashboardStats)
+def get_dashboard_stats(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Fetch analytics for the dashboard"""
+    # Only allow admin and authorized users
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    total_posts = db.query(models.BlogPost).count()
+    published_posts = db.query(models.BlogPost).filter(models.BlogPost.status == "published").count()
+    total_events = db.query(models.Event).count()
+    total_subscribers = db.query(models.Subscriber).count()
+    total_enquiries = db.query(models.ContactEnquiry).count()
+    
+    return {
+        "total_posts": total_posts,
+        "published_posts": published_posts,
+        "total_events": total_events,
+        "total_subscribers": total_subscribers,
+        "total_enquiries": total_enquiries
+    }
+
+@app.post("/events/reorder")
+def reorder_events(id_order: List[int], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    try:
+        # Use a more efficient update method if many events, but this is fine for dozens
+        for index, event_id in enumerate(id_order):
+            db.query(models.Event).filter(models.Event.id == event_id).update({"order": index})
+        db.commit()
+        return {"message": "Order updated successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
