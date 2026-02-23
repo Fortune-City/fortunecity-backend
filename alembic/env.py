@@ -26,6 +26,13 @@ from database import Base
 import models # ensure models are registered
 target_metadata = Base.metadata
 
+# Set the sqlalchemy.url from the environment variable
+from dotenv import load_dotenv
+load_dotenv()
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

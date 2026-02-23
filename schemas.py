@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from datetime import datetime
 
 class UserLogin(BaseModel):
@@ -172,6 +172,12 @@ class EventBase(BaseModel):
     organizer_email: Optional[str] = None
     category: Optional[str] = "ENTERTAINMENT"
     order: Optional[int] = 0
+    is_registration_enabled: Optional[bool] = False
+    registration_fee: Optional[str] = "0"
+    child_registration_fee: Optional[str] = "0"
+    child_age_limit: Optional[str] = None
+    max_attendees: Optional[int] = None
+    external_registration_url: Optional[str] = None
 
 class EventCreate(EventBase):
     title: str
@@ -199,10 +205,55 @@ class EventUpdate(BaseModel):
     organizer_phone: Optional[str] = None
     organizer_email: Optional[str] = None
     category: Optional[str] = None
+    order: Optional[int] = None
+    is_registration_enabled: Optional[bool] = None
+    registration_fee: Optional[str] = None
+    child_registration_fee: Optional[str] = None
+    child_age_limit: Optional[str] = None
+    max_attendees: Optional[int] = None
+    external_registration_url: Optional[str] = None
 
 class EventResponse(EventBase):
     id: int
     created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Attendee Schemas
+class AttendeeBase(BaseModel):
+    name: str
+    dob: str
+    category: str # 'adult' or 'child'
+
+class AttendeeCreate(AttendeeBase):
+    pass
+
+class AttendeeResponse(AttendeeBase):
+    id: int
+    registration_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Event Registration Schemas
+class EventRegistrationBase(BaseModel):
+    full_name: str
+    email: str
+    phone: str
+    ticket_count: Optional[int] = 1
+    child_ticket_count: Optional[int] = 0
+
+class EventRegistrationCreate(EventRegistrationBase):
+    attendees: Optional[List[AttendeeCreate]] = []
+
+class EventRegistrationResponse(EventRegistrationBase):
+    id: int
+    event_id: int
+    status: str
+    created_at: datetime
+    attendees: List[AttendeeResponse] = []
 
     class Config:
         from_attributes = True
@@ -213,3 +264,4 @@ class DashboardStats(BaseModel):
     total_events: int
     total_subscribers: int
     total_enquiries: int
+    total_registrations: int

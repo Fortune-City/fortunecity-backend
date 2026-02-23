@@ -36,7 +36,7 @@ class BlogPost(Base):
     excerpt = Column(Text, nullable=True)
     featured_image = Column(String, nullable=True)
     featured_image_alt = Column(String, nullable=True)
-    status = Column(String, default="draft") # draft, published, trash
+    status = Column(String, default="draft", index=True) # draft, published, trash
     author_id = Column(Integer, index=True)
     seo_data = Column(JSON, nullable=True, default=dict)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -73,12 +73,12 @@ class GalleryItem(Base):
     __tablename__ = "gallery_items"
 
     id = Column(Integer, primary_key=True, index=True)
-    type = Column(String, default="photo")  # photo, video
+    type = Column(String, default="photo", index=True)  # photo, video
     url = Column(String, nullable=False)    # Cloudinary URL or Video Link
     public_id = Column(String, nullable=True) # Cloudinary Public ID
     thumbnail_url = Column(String, nullable=True) # For videos
     title = Column(String, nullable=True)
-    order = Column(Integer, default=0)
+    order = Column(Integer, default=0, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Event(Base):
@@ -102,6 +102,48 @@ class Event(Base):
     organizer_name = Column(String, nullable=True)
     organizer_phone = Column(String, nullable=True)
     organizer_email = Column(String, nullable=True)
-    category = Column(String, default="ENTERTAINMENT")
-    order = Column(Integer, default=0)
+    category = Column(String, default="ENTERTAINMENT", index=True)
+    order = Column(Integer, default=0, index=True)
+    
+    # Registration Settings
+    is_registration_enabled = Column(Boolean, default=False)
+    registration_fee = Column(String, nullable=True, default="0")
+    child_registration_fee = Column(String, nullable=True, default="0")
+    child_age_limit = Column(String, nullable=True)
+    max_attendees = Column(Integer, nullable=True)
+    external_registration_url = Column(String, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    registrations = relationship("EventRegistration", back_populates="event", cascade="all, delete-orphan")
+
+class EventRegistration(Base):
+    __tablename__ = "event_registrations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    event_id = Column(Integer, ForeignKey("events.id", ondelete="CASCADE"), nullable=False)
+    full_name = Column(String, index=True)
+    email = Column(String, index=True)
+    phone = Column(String)
+    ticket_count = Column(Integer, default=1)
+    child_ticket_count = Column(Integer, default=0)
+    status = Column(String, default="confirmed") # confirmed, cancelled
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    event = relationship("Event", back_populates="registrations")
+    attendees = relationship("Attendee", back_populates="registration", cascade="all, delete-orphan")
+
+class Attendee(Base):
+    __tablename__ = "event_attendees"
+
+    id = Column(Integer, primary_key=True, index=True)
+    registration_id = Column(Integer, ForeignKey("event_registrations.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String)
+    dob = Column(String)
+    category = Column(String) # 'adult' or 'child'
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationship
+    registration = relationship("EventRegistration", back_populates="attendees")

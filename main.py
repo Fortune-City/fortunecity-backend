@@ -13,9 +13,25 @@ import os
 import traceback
 import cloudinary
 import cloudinary.uploader
+import cloudinary.utils
 from dotenv import load_dotenv
-import asyncio
+import logging
+import hashlib
 import re
+import asyncio
+
+from logging.handlers import RotatingFileHandler
+
+# Configure Logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        RotatingFileHandler("backend.log", maxBytes=10*1024*1024, backupCount=5)
+    ]
+)
+logger = logging.getLogger("fortune-city")
 
 load_dotenv(override=True)
 
@@ -24,30 +40,78 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Fortune City API")
 
-# Security: CORS Policy
+# Security & Performance Middleware Stack
+# Note: Last added = first executed for requests.
+
+# 3. GZip Compression (Inner-most)
+from fastapi.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# 2. CORS Policy (Outer-middle)
 origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174")
 origins = [origin.strip() for origin in origins_str.split(",")]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
-# Security: Trusted Host
+# 1. Trusted Host (Outer-most - runs first)
 allowed_hosts_str = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 allowed_hosts = [host.strip() for host in allowed_hosts_str.split(",")]
-
-from fastapi.middleware.gzip import GZipMiddleware
-
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-
+# In many production environments (like AWS LB), we might need to trust the load balancer
+# but strict host checking is good security practice.
 app.add_middleware(
     TrustedHostMiddleware, 
     allowed_hosts=allowed_hosts
 )
+
+# 4. Custom Security Headers Middleware
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; object-src 'none';"
+    return response
+
+# Error Logging Middleware
+@app.middleware("http")
+async def log_requests(request, call_next):
+    start_time = datetime.now()
+    response = await call_next(request)
+    duration = datetime.now() - start_time
+    logger.info(f"{request.method} {request.url.path} - {response.status_code} ({duration.total_seconds():.3f}s)")
+    return response
+
+# Validate essential environment variables
+required_env_vars = [
+    "DATABASE_URL",
+    "SECRET_KEY",
+    "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET"
+]
+
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+if missing_vars:
+    logger.warning(f"Missing environment variables: {', '.join(missing_vars)}. This may cause issues in production.")
+
+from fastapi.responses import JSONResponse
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.error(f"Unhandled Exception: {exc}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An internal server error occurred. Please contact support."}
+    )
+
 
 @app.on_event("startup")
 async def startup_db_client():
@@ -60,21 +124,20 @@ async def startup_db_client():
         
         if not admin_user:
             # Create default admin user
-            # In production, you might want to load these from env vars too for better security
             default_password = os.getenv("ADMIN_DEFAULT_PASSWORD", "fortunecityadmin@123")
             hashed_pwd = get_password_hash(default_password)
             
             new_admin = models.User(username=admin_email, hashed_password=hashed_pwd)
             db.add(new_admin)
             db.commit()
-            print(f"System: Admin user '{admin_email}' seeded successfully.")
+            logger.info(f"Admin user '{admin_email}' seeded successfully.")
     except Exception as e:
-        print(f"System: Error seeding database: {e}")
+        logger.error(f"Error seeding database: {e}")
     finally:
         db.close()
     
     # Start background cleanup task for expired events
-    print("System: Launching event cleanup background task...")
+    logger.info("Launching event cleanup background task...")
     asyncio.create_task(cleanup_expired_events_task())
 
 # Configure Cloudinary globally once
@@ -84,23 +147,14 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
 
-def get_cloudinary_config():
-    """Redundant now, but kept for compatibility with existing code if needed."""
-    pass
-
 async def cleanup_expired_events_task():
     """Background task to remove events that have already passed their end time."""
-    print("System: Event cleanup background task started.")
+    logger.info("Event cleanup background task started.")
     while True:
         try:
             from database import SessionLocal
-            import models
-            from datetime import datetime
-            import cloudinary.uploader
-            
             db = SessionLocal()
             try:
-                # Use current local time for comparison since dates in DB are local strings
                 now = datetime.now()
                 events = db.query(models.Event).all()
                 deleted_count = 0
@@ -110,37 +164,75 @@ async def cleanup_expired_events_task():
                         continue
                         
                     try:
-                        # Parse date and time (default to 11:59 PM if no end_time)
                         time_str = event.end_time if event.end_time else "11:59 PM"
-                        # Expecting format like '22-02-2026 11:46 PM'
                         end_dt = datetime.strptime(f"{event.end_date} {time_str}", "%d-%m-%Y %I:%M %p")
                         
                         if now > end_dt:
-                            print(f"Cleanup: Event '{event.title}' (ID: {event.id}) expired on {end_dt}. Deleting...")
+                            logger.info(f"Cleanup: Event '{event.title}' (ID: {event.id}) expired on {end_dt}. Deleting...")
                             
-                            # Delete image from Cloudinary if it exists
                             if event.featured_image_public_id:
                                 try:
                                     cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
                                 except Exception as ce:
-                                    print(f"Cleanup: Cloudinary deletion failed for {event.featured_image_public_id}: {ce}")
+                                    logger.error(f"Cleanup: Cloudinary deletion failed for {event.featured_image_public_id}: {ce}")
                             
                             db.delete(event)
                             deleted_count += 1
-                    except Exception as parse_err:
-                        # Skip if date format is invalid or can't be parsed
+                    except Exception:
                         continue
                 
                 if deleted_count > 0:
                     db.commit()
-                    print(f"Cleanup: Successfully removed {deleted_count} expired events.")
+                    logger.info(f"Cleanup: Successfully removed {deleted_count} expired events.")
             finally:
                 db.close()
         except Exception as e:
-            print(f"Cleanup Error: {e}")
+            logger.error(f"Cleanup Error: {e}")
             
-        # Run every 600 seconds (10 minutes)
         await asyncio.sleep(600)
+
+@app.get("/search")
+def search(q: str, db: Session = Depends(get_db)):
+    """Search for posts and events based on query string."""
+    if not q or len(q) < 2:
+        return {"results": []}
+
+    search_query = f"%{q}%"
+    
+    # Search Blog Posts
+    posts = db.query(models.BlogPost).filter(
+        (models.BlogPost.status == "published") & 
+        (models.BlogPost.title.ilike(search_query) | models.BlogPost.content.ilike(search_query) | models.BlogPost.excerpt.ilike(search_query))
+    ).limit(5).all()
+    
+    # Search Events
+    events = db.query(models.Event).filter(
+        models.Event.title.ilike(search_query) | models.Event.description.ilike(search_query) | models.Event.category.ilike(search_query)
+    ).limit(5).all()
+    
+    results = []
+    
+    for post in posts:
+        results.append({
+            "id": post.id,
+            "title": post.title,
+            "slug": post.slug,
+            "type": "blog",
+            "image": post.featured_image,
+            "description": post.excerpt or (post.content[:100] + "...") if post.content else ""
+        })
+        
+    for event in events:
+        results.append({
+            "id": event.id,
+            "title": event.title,
+            "slug": event.slug,
+            "type": "event",
+            "image": event.featured_image,
+            "description": event.description[:100] + "..." if event.description else ""
+        })
+        
+    return {"results": results}
 
 @app.get("/")
 def read_root():
@@ -643,15 +735,13 @@ def get_images(current_user: models.User = Depends(get_current_user)):
         return result.get("resources", [])
     except Exception as e:
         # Log error for debugging
-        print(f"Cloudinary error: {e}")
+        logger.error(f"Cloudinary error: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch images: {str(e)}")
 
 @app.delete("/media/images/{public_id:path}")
 def delete_image(public_id: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
-    get_cloudinary_config()
     
     try:
         # 1. Cascade Nullification: 
@@ -689,8 +779,14 @@ def delete_image(public_id: str, current_user: models.User = Depends(get_current
         
     except Exception as e:
         db.rollback()
-        print(f"Delete Error for {public_id}: {e}")
+        logger.error(f"Delete Error for {public_id}: {e}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
+
+@app.delete("/media/delete")
+def delete_image_alt(public_id: str, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Alternative deletion endpoint using query parameter to avoid path conversion issues."""
+    return delete_image(public_id, current_user, db)
 
 @app.post("/media/crop")
 def crop_image(
@@ -705,8 +801,6 @@ def crop_image(
     """Perform server-side crop using Cloudinary transformation and overwrite the original."""
     if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
-    get_cloudinary_config()
     
     try:
         # This is extremely fast as Cloudinary handles the fetch and crop on their end
@@ -733,7 +827,7 @@ def crop_image(
             "created_at": result.get("created_at")
         }
     except Exception as e:
-        print(f"Crop Error: {e}")
+        logger.error(f"Crop Error: {e}")
         raise HTTPException(status_code=500, detail=f"Server-side crop failed: {str(e)}")
 
 @app.post("/user/profile-image")
@@ -743,7 +837,6 @@ def upload_profile_image(
     current_user: models.User = Depends(get_current_user)
 ):
     """Upload a profile image to Cloudinary and update user record."""
-    get_cloudinary_config()
     
     try:
         # 1. Delete old image if exists
@@ -751,7 +844,7 @@ def upload_profile_image(
             try:
                 cloudinary.uploader.destroy(current_user.profile_image_public_id)
             except Exception as e:
-                print(f"Error deleting old profile image: {e}")
+                logger.error(f"Error deleting old profile image: {e}")
         
         # 2. Upload new image to profile-img folder
         # Check file size (1MB = 1024 * 1024 bytes)
@@ -785,8 +878,6 @@ def delete_profile_image(
     if not current_user.profile_image_public_id:
         raise HTTPException(status_code=400, detail="No profile image to remove")
     
-    get_cloudinary_config()
-    
     try:
         # 1. Delete from Cloudinary
         cloudinary.uploader.destroy(current_user.profile_image_public_id)
@@ -797,11 +888,9 @@ def delete_profile_image(
         db.commit()
         db.refresh(current_user)
         
-        return {"message": "Profile image removed successfully"}
     except Exception as e:
+        logger.error(f"Failed to remove image: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to remove image: {str(e)}")
-
-import hashlib
 
 @app.post("/upload")
 async def upload_image(
@@ -810,36 +899,47 @@ async def upload_image(
     folder: Optional[str] = Form("blogs"),
     current_user: models.User = Depends(get_current_user)
 ):
-    """Upload an image to Cloudinary with automatic deduplication. Optimized for speed and large files."""
+    """Upload an image to Cloudinary. Optimized for speed and large files."""
     if current_user.role not in ["admin", "editor", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized to upload files")
     
     try:
-        # Read file content efficiently
-        file_content = await file.read()
-        await file.seek(0)
-        
         is_video = "video" in folder.lower() or file.content_type.startswith("video/")
-        # Images: 2MB, Videos: 50MB (increased slightly for convenience)
-        MAX_SIZE = (50 if is_video else 2) * 1024 * 1024
+        # Limits: Images: 10MB, Videos: 100MB
+        MAX_SIZE = (100 if is_video else 10) * 1024 * 1024
         
-        if len(file_content) > MAX_SIZE:
-             size_label = "50MB" if is_video else "2MB"
+        # Check size without reading everything if possible, though UploadFile usually has it
+        file.file.seek(0, 2)
+        actual_size = file.file.tell()
+        file.file.seek(0)
+
+        if actual_size > MAX_SIZE:
+             size_label = "100MB" if is_video else "10MB"
              raise HTTPException(status_code=400, detail=f"File too large. Maximum size for {'videos' if is_video else 'images'} is {size_label}.")
         
-        # Deduplication logic
+        base_folder = "fortune-city"
+        final_folder = folder if folder.startswith(base_folder) else f"{base_folder}/{folder}"
+
+        # Deduplication / Public ID generation
         if not public_id:
-            file_hash = hashlib.md5(file_content).hexdigest()
-            base_folder = "fortune-city"
-            final_folder = folder if folder.startswith(base_folder) else f"{base_folder}/{folder}"
+            if is_video:
+                # Skip MD5 for videos to save time, use filename + timestamp
+                timestamp = str(int(datetime.now().timestamp()))
+                clean_name = "".join(c for c in file.filename if c.isalnum() or c in "._-").rstrip()
+                file_hash = f"{clean_name.split('.')[0]}_{timestamp}"
+            else:
+                # For images, MD5 is fast enough and useful for deduplication
+                file_content = await file.read()
+                file_hash = hashlib.md5(file_content).hexdigest()
+                await file.seek(0)
             
             upload_params = {
                 "public_id": file_hash,
                 "folder": final_folder,
                 "overwrite": True,
                 "resource_type": "auto",
-                "quality": "auto:good", # Automatic quality optimization
-                "fetch_format": "auto"   # Automatic format optimization (webp/avif where supported)
+                "quality": "auto:good",
+                "fetch_format": "auto"
             }
         else:
             upload_params = {
@@ -848,13 +948,13 @@ async def upload_image(
                 "resource_type": "auto"
             }
 
-        # Use upload_large for anything over 10MB or videos for better reliability and speed
-        if is_video or len(file_content) > 10 * 1024 * 1024:
+        # Use upload_large for large files or videos
+        if is_video or actual_size > 10 * 1024 * 1024:
             result = await asyncio.to_thread(
                 cloudinary.uploader.upload_large,
                 file.file,
                 **upload_params,
-                chunk_size=6000000 # 6MB chunks
+                chunk_size=6000000 
             )
         else:
             result = await asyncio.to_thread(
@@ -872,9 +972,44 @@ async def upload_image(
             "bytes": result.get("bytes"),
             "created_at": result.get("created_at")
         }
+    except HTTPException:
+        raise
     except Exception as e:
-        print(f"Upload Error: {e}")
-        raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
+        logger.error(f"Upload Error: {e}")
+        raise HTTPException(status_code=500, detail=f"File upload failed: {str(e)}")
+
+@app.get("/media/sign")
+def sign_upload(folder: str = "blogs", public_id: Optional[str] = None, current_user: models.User = Depends(get_current_user)):
+    """Generate a signed upload signature for direct browser-to-Cloudinary uploading."""
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    # We use a timestamp for the signature
+    import time
+    timestamp = int(time.time())
+    
+    # Parameters to sign
+    params = {
+        "timestamp": timestamp,
+        "folder": folder if folder.startswith("fortune-city") else f"fortune-city/{folder}"
+    }
+    
+    if public_id:
+        params["public_id"] = public_id
+        
+    # Generate signature using API Secret
+    signature = cloudinary.utils.api_sign_request(
+        params, 
+        os.getenv("CLOUDINARY_API_SECRET")
+    )
+    
+    return {
+        "signature": signature,
+        "timestamp": timestamp,
+        "api_key": os.getenv("CLOUDINARY_API_KEY"),
+        "cloud_name": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "folder": params["folder"]
+    }
 
 # ==================== GALLERY ENDPOINTS ====================
 
@@ -911,16 +1046,12 @@ def delete_gallery_item(item_id: int, current_user: models.User = Depends(get_cu
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     
-    # If it's a photo or video upload (has public_id), remove from Cloudinary
     if item.public_id:
-        get_cloudinary_config()
         try:
-            # Determine resource_type based on item type
             resource_type = "video" if item.type == "video" else "image"
             cloudinary.uploader.destroy(item.public_id, resource_type=resource_type, invalidate=True)
         except Exception as e:
-            print(f"Error deleting from Cloudinary: {e}")
-            # We continue to delete from DB even if Cloudinary fails, or maybe we should log it
+            logger.error(f"Error deleting from Cloudinary: {e}")
             
     db.delete(item)
     db.commit()
@@ -947,19 +1078,14 @@ def update_gallery_item(
     # 2. Handle Server-Side Cropping if provided
     # Only proceed if crop_data exists and is not empty
     if item_data.crop_data and len(item_data.crop_data) > 0 and item.public_id:
-        get_cloudinary_config()
         try:
             crop = item_data.crop_data
-            # Convert values to int safely
             cx = int(float(crop.get('x', 0)))
             cy = int(float(crop.get('y', 0)))
             cw = int(float(crop.get('width', 100)))
             ch = int(float(crop.get('height', 100)))
 
-            # Revert to URL but strip versioning (/v123456789/) to avoid "Resource not found" errors
-            import re
             source_url = item.url
-            # Remove the version string (e.g., /v1771392831/) from the URL if present
             clean_url = re.sub(r'/v\d+/', '/', source_url)
 
             result = cloudinary.uploader.upload(
@@ -978,13 +1104,7 @@ def update_gallery_item(
             item.url = result.get("secure_url")
             item.public_id = result.get("public_id")
         except Exception as e:
-            # Enhanced logging for debugging
-            import traceback
-            print(f"--- Gallery Crop Error ---")
-            print(f"Item ID: {item_id}")
-            print(f"Clean URL: {clean_url if 'clean_url' in locals() else 'N/A'}")
-            print(f"Error: {str(e)}")
-            traceback.print_exc()
+            logger.exception(f"Gallery Crop Error for item {item_id}")
             raise HTTPException(status_code=500, detail=f"Failed to apply crop: {str(e)}")
     
     db.commit()
@@ -1039,8 +1159,7 @@ def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
         events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
         return events
     except Exception as e:
-        print(f"Error in get_events: {e}")
-        traceback.print_exc()
+        logger.exception("Error in get_events")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/events/{slug}", response_model=schemas.EventResponse)
@@ -1071,7 +1190,6 @@ def update_event(event_id: int, event_update: schemas.EventUpdate, current_user:
     # If a new image is being set, delete the old one from Cloudinary
     if "featured_image_public_id" in update_data and db_event.featured_image_public_id:
         if update_data["featured_image_public_id"] != db_event.featured_image_public_id:
-            get_cloudinary_config()
             try:
                 cloudinary.uploader.destroy(db_event.featured_image_public_id, invalidate=True)
             except Exception as e:
@@ -1095,13 +1213,84 @@ def delete_event(event_id: int, current_user: models.User = Depends(get_current_
     
     # Delete image from Cloudinary if exists
     if event.featured_image_public_id:
-        get_cloudinary_config()
         try:
             cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
         except Exception as e:
             print(f"Error deleting event image from Cloudinary: {e}")
             
     db.delete(event)
+    db.commit()
+    return None
+
+# ==================== EVENT REGISTRATION ENDPOINTS ====================
+
+@app.post("/events/{event_id}/register", response_model=schemas.EventRegistrationResponse, status_code=status.HTTP_201_CREATED)
+def register_for_event(event_id: int, registration: schemas.EventRegistrationCreate, db: Session = Depends(get_db)):
+    """Register for an event (public endpoint)"""
+    event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    if not event.is_registration_enabled:
+        raise HTTPException(status_code=400, detail="Registration is not enabled for this event")
+    
+    # Check max attendees if set
+    if event.max_attendees:
+        current_registrations = db.query(models.EventRegistration).filter(
+            models.EventRegistration.event_id == event_id,
+            models.EventRegistration.status == "confirmed"
+        ).count()
+        
+        if current_registrations >= event.max_attendees:
+            raise HTTPException(status_code=400, detail="Event is already full")
+
+    new_reg = models.EventRegistration(
+        event_id=event_id,
+        full_name=registration.full_name,
+        email=registration.email,
+        phone=registration.phone,
+        ticket_count=registration.ticket_count,
+        child_ticket_count=registration.child_ticket_count,
+        status="confirmed"
+    )
+    
+    db.add(new_reg)
+    db.flush() # Get the registration ID before committing
+
+    # Add individual attendees if provided
+    if registration.attendees:
+        for attendee_data in registration.attendees:
+            new_attendee = models.Attendee(
+                registration_id=new_reg.id,
+                name=attendee_data.name,
+                dob=attendee_data.dob,
+                category=attendee_data.category
+            )
+            db.add(new_attendee)
+
+    db.commit()
+    db.refresh(new_reg)
+    return new_reg
+
+@app.get("/admin/events/{event_id}/registrations", response_model=List[schemas.EventRegistrationResponse])
+def get_event_registrations(event_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Get all registrations for a specific event (admin only)"""
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    return db.query(models.EventRegistration).filter(models.EventRegistration.event_id == event_id).all()
+
+@app.delete("/admin/registrations/{registration_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_registration(registration_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Delete a registration (admin only)"""
+    if current_user.role not in ["admin", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    reg = db.query(models.EventRegistration).filter(models.EventRegistration.id == registration_id).first()
+    if not reg:
+        raise HTTPException(status_code=404, detail="Registration not found")
+        
+    db.delete(reg)
     db.commit()
     return None
 
@@ -1117,13 +1306,15 @@ def get_dashboard_stats(current_user: models.User = Depends(get_current_user), d
     total_events = db.query(models.Event).count()
     total_subscribers = db.query(models.Subscriber).count()
     total_enquiries = db.query(models.ContactEnquiry).count()
+    total_registrations = db.query(models.EventRegistration).count()
     
     return {
         "total_posts": total_posts,
         "published_posts": published_posts,
         "total_events": total_events,
         "total_subscribers": total_subscribers,
-        "total_enquiries": total_enquiries
+        "total_enquiries": total_enquiries,
+        "total_registrations": total_registrations
     }
 
 @app.post("/events/reorder")

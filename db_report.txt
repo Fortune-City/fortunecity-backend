@@ -1,0 +1,48 @@
+Database URL: postgresql://postgres:***@localhost/fortunecity
+
+Table: events
+  - id (INTEGER)
+  - title (VARCHAR)
+  - description (TEXT)
+  - date (VARCHAR)
+  - time (VARCHAR)
+  - location (VARCHAR)
+  - address (TEXT)
+  - map_url (TEXT)
+  - featured_image (VARCHAR)
+  - featured_image_public_id (VARCHAR)
+  - organizer_name (VARCHAR)
+  - organizer_phone (VARCHAR)
+  - organizer_email (VARCHAR)
+  - category (VARCHAR)
+  - created_at (TIMESTAMP)
+  - start_date (VARCHAR)
+  - end_date (VARCHAR)
+  - slug (VARCHAR)
+  - start_time (VARCHAR)
+  - end_time (VARCHAR)
+  - order (INTEGER)
+  - is_registration_enabled (BOOLEAN)
+  - registration_fee (VARCHAR)
+  - max_attendees (INTEGER)
+  - external_registration_url (VARCHAR)
+  - child_registration_fee (VARCHAR)
+  - child_age_limit (VARCHAR)
+  [OK] is_registration_enabled exists
+  [OK] registration_fee exists
+  [OK] child_registration_fee exists
+  [OK] child_age_limit exists
+  [OK] max_attendees exists
+  [OK] external_registration_url exists
+
+Table: event_registrations
+  - id (INTEGER)
+  - event_id (INTEGER)
+  - full_name (VARCHAR)
+  - email (VARCHAR)
+  - phone (VARCHAR)
+  - ticket_count (INTEGER)
+  - status (VARCHAR)
+  - created_at (TIMESTAMP)
+  - child_ticket_count (INTEGER)
+  [OK] child_ticket_count exists

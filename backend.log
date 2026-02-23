@@ -1,0 +1,2434 @@
+2026-02-21 09:08:59,115 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:08:59,130 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:08:59,156 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:08:59,328 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:05,817 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:05,822 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:05,828 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:05,837 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:07,722 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:07,755 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:07,797 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:07,862 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:14,624 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:14,662 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:14,671 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:14,680 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:16,158 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:29,765 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:29,786 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:29,791 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:29,923 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:36,399 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:36,408 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:36,433 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:09:37,143 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:10:06,979 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:10:06,979 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 09:10:06,992 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:10:06,993 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 09:10:07,008 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:10:07,009 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 09:10:07,058 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 09:10:07,059 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 14:55:15,687 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 14:55:15,688 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 14:55:15,688 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 14:55:15,695 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 14:55:15,695 [INFO] fortune-city: Event cleanup background task started.
+2026-02-21 14:55:15,698 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-21 14:55:15,698 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 09:31:11,685 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 09:31:11,686 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 09:39:40,008 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 09:39:40,009 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 09:54:43,154 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 09:54:43,155 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 11:52:01,465 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 11:52:01,465 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 11:52:01,474 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 11:52:03,634 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 11:52:03,634 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 11:52:03,638 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 11:52:45,714 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 11:52:45,714 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 11:52:45,719 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 11:52:48,275 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 11:52:48,276 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 11:52:48,281 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 11:53:53,538 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 11:53:53,726 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.is_registration_enabled does not exist
+LINE 1: ... events_category, events."order" AS events_order, events.is_...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:17:36,575 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 12:17:36,576 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 12:17:36,581 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:17:38,649 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 12:17:38,650 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 12:17:38,655 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:20:04,094 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:20:04,108 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:21:17,748 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 12:21:17,749 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 12:21:17,754 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:31:17,760 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:41:17,777 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:26,734 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:26,755 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:28,966 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:28,984 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:52,540 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:49:52,558 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:51:17,787 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:45,251 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:45,270 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:48,497 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:48,535 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:54,071 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 12:59:54,093 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:01:17,802 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:01:39,397 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:01:39,445 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:02:12,943 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:02:12,969 [ERROR] fortune-city: Error in get_events
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Fortune city\backend\main.py", line 1111, in get_events
+    events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Fortune city\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events ORDER BY events."order" ASC, events.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:02:27,415 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 13:02:27,416 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 13:02:27,422 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:12:27,435 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:22:27,447 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 13:32:05,206 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 13:32:05,207 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 13:32:05,212 [ERROR] fortune-city: Cleanup Error: (psycopg2.errors.UndefinedColumn) column events.child_registration_fee does not exist
+LINE 1: ...ents.registration_fee AS events_registration_fee, events.chi...
+                                                             ^
+
+[SQL: SELECT events.id AS events_id, events.title AS events_title, events.slug AS events_slug, events.description AS events_description, events.date AS events_date, events.start_date AS events_start_date, events.end_date AS events_end_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.time AS events_time, events.location AS events_location, events.address AS events_address, events.map_url AS events_map_url, events.featured_image AS events_featured_image, events.featured_image_public_id AS events_featured_image_public_id, events.organizer_name AS events_organizer_name, events.organizer_phone AS events_organizer_phone, events.organizer_email AS events_organizer_email, events.category AS events_category, events."order" AS events_order, events.is_registration_enabled AS events_is_registration_enabled, events.registration_fee AS events_registration_fee, events.child_registration_fee AS events_child_registration_fee, events.child_age_limit AS events_child_age_limit, events.max_attendees AS events_max_attendees, events.external_registration_url AS events_external_registration_url, events.created_at AS events_created_at 
+FROM events]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-23 16:49:31,631 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 16:49:31,632 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 16:50:21,812 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 16:50:21,813 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 16:51:43,567 [WARNING] urllib3.connectionpool: Connection pool is full, discarding connection: api.cloudinary.com. Connection pool size: 1
+2026-02-23 16:53:31,106 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 16:53:31,108 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 16:53:32,534 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 16:53:32,536 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:21,666 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:21,667 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:22,394 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:22,395 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:33,271 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:33,272 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:33,812 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:33,813 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:46,519 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:46,520 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:32:47,386 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:32:47,389 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:33:41,037 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:33:41,038 [INFO] fortune-city: Event cleanup background task started.
+2026-02-23 17:33:41,916 [INFO] fortune-city: Launching event cleanup background task...
+2026-02-23 17:33:41,919 [INFO] fortune-city: Event cleanup background task started.
