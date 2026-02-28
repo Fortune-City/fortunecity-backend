@@ -128,18 +128,52 @@ class SubscriberResponse(SubscriberBase):
         from_attributes = True
 
 # Gallery Schemas
+class GalleryCollectionBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    date: Optional[str] = None
+    type: str = "photo" # photo, video
+    featured_image: Optional[str] = None
+    featured_image_public_id: Optional[str] = None
+    order: int = 0
+
+class GalleryCollectionCreate(GalleryCollectionBase):
+    pass
+
+class GalleryCollectionUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    date: Optional[str] = None
+    type: Optional[str] = None
+    featured_image: Optional[str] = None
+    featured_image_public_id: Optional[str] = None
+    order: Optional[int] = None
+
+class GalleryCollectionResponse(GalleryCollectionBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
 class GalleryItemBase(BaseModel):
     type: str = "photo" # photo, video
     url: str
     public_id: Optional[str] = None
     thumbnail_url: Optional[str] = None # For videos
     title: Optional[str] = None
+    collection_id: Optional[int] = None
+    collection_name: Optional[str] = None
+    event_date: Optional[str] = None
 
 class GalleryItemCreate(GalleryItemBase):
     pass
 
 class GalleryItemUpdate(BaseModel):
     title: Optional[str] = None
+    collection_id: Optional[int] = None
+    collection_name: Optional[str] = None
+    event_date: Optional[str] = None
     url: Optional[str] = None
     public_id: Optional[str] = None
     crop_data: Optional[dict] = None # {x, y, width, height}
@@ -147,6 +181,12 @@ class GalleryItemUpdate(BaseModel):
 class GalleryItemResponse(GalleryItemBase):
     id: int
     created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class GalleryCollectionWithItems(GalleryCollectionResponse):
+    items: List[GalleryItemResponse] = []
 
     class Config:
         from_attributes = True
@@ -176,6 +216,8 @@ class EventBase(BaseModel):
     registration_fee: Optional[str] = "0"
     child_registration_fee: Optional[str] = "0"
     child_age_limit: Optional[str] = None
+    registration_start_date: Optional[str] = None
+    registration_end_date: Optional[str] = None
     max_attendees: Optional[int] = None
     external_registration_url: Optional[str] = None
 
@@ -210,6 +252,8 @@ class EventUpdate(BaseModel):
     registration_fee: Optional[str] = None
     child_registration_fee: Optional[str] = None
     child_age_limit: Optional[str] = None
+    registration_start_date: Optional[str] = None
+    registration_end_date: Optional[str] = None
     max_attendees: Optional[int] = None
     external_registration_url: Optional[str] = None
 
@@ -251,12 +295,16 @@ class EventRegistrationCreate(EventRegistrationBase):
 class EventRegistrationResponse(EventRegistrationBase):
     id: int
     event_id: int
+    ticket_id: Optional[str] = None
     status: str
     created_at: datetime
     attendees: List[AttendeeResponse] = []
 
     class Config:
         from_attributes = True
+
+class EventRegistrationListResponse(EventRegistrationResponse):
+    event_title: Optional[str] = None
 
 class DashboardStats(BaseModel):
     total_posts: int

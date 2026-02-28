@@ -69,17 +69,37 @@ class Subscriber(Base):
     phone = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class GalleryCollection(Base):
+    __tablename__ = "gallery_collections"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    date = Column(String, nullable=True)
+    type = Column(String, default="photo", index=True) # photo or video
+    featured_image = Column(String, nullable=True)
+    featured_image_public_id = Column(String, nullable=True)
+    order = Column(Integer, default=0, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    items = relationship("GalleryItem", back_populates="collection", cascade="all, delete-orphan")
+
 class GalleryItem(Base):
     __tablename__ = "gallery_items"
 
     id = Column(Integer, primary_key=True, index=True)
+    collection_id = Column(Integer, ForeignKey("gallery_collections.id", ondelete="CASCADE"), nullable=True)
     type = Column(String, default="photo", index=True)  # photo, video
     url = Column(String, nullable=False)    # Cloudinary URL or Video Link
     public_id = Column(String, nullable=True) # Cloudinary Public ID
     thumbnail_url = Column(String, nullable=True) # For videos
     title = Column(String, nullable=True)
+    collection_name = Column(String, nullable=True)
+    event_date = Column(String, nullable=True)
     order = Column(Integer, default=0, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    collection = relationship("GalleryCollection", back_populates="items")
 
 class Event(Base):
     __tablename__ = "events"
@@ -110,6 +130,8 @@ class Event(Base):
     registration_fee = Column(String, nullable=True, default="0")
     child_registration_fee = Column(String, nullable=True, default="0")
     child_age_limit = Column(String, nullable=True)
+    registration_start_date = Column(String, nullable=True)
+    registration_end_date = Column(String, nullable=True)
     max_attendees = Column(Integer, nullable=True)
     external_registration_url = Column(String, nullable=True)
     
@@ -126,6 +148,7 @@ class EventRegistration(Base):
     full_name = Column(String, index=True)
     email = Column(String, index=True)
     phone = Column(String)
+    ticket_id = Column(String, unique=True, index=True, nullable=True)
     ticket_count = Column(Integer, default=1)
     child_ticket_count = Column(Integer, default=0)
     status = Column(String, default="confirmed") # confirmed, cancelled

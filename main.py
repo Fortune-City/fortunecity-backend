@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Form, File, UploadFile
-from typing import Optional, List
+from fastapi import FastAPI, Depends, HTTPException, status, Form, File, UploadFile, BackgroundTasks
+from typing import Optional, List, Union
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
 from datetime import datetime
@@ -15,6 +15,8 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.utils
 from dotenv import load_dotenv
+import string
+import random
 import logging
 import hashlib
 import re
@@ -148,47 +150,9 @@ cloudinary.config(
 )
 
 async def cleanup_expired_events_task():
-    """Background task to remove events that have already passed their end time."""
-    logger.info("Event cleanup background task started.")
+    """Background task previously used to remove events, now disabled placeholder."""
+    logger.info("Event cleanup background task started (Disabled).")
     while True:
-        try:
-            from database import SessionLocal
-            db = SessionLocal()
-            try:
-                now = datetime.now()
-                events = db.query(models.Event).all()
-                deleted_count = 0
-                
-                for event in events:
-                    if not event.end_date:
-                        continue
-                        
-                    try:
-                        time_str = event.end_time if event.end_time else "11:59 PM"
-                        end_dt = datetime.strptime(f"{event.end_date} {time_str}", "%d-%m-%Y %I:%M %p")
-                        
-                        if now > end_dt:
-                            logger.info(f"Cleanup: Event '{event.title}' (ID: {event.id}) expired on {end_dt}. Deleting...")
-                            
-                            if event.featured_image_public_id:
-                                try:
-                                    cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
-                                except Exception as ce:
-                                    logger.error(f"Cleanup: Cloudinary deletion failed for {event.featured_image_public_id}: {ce}")
-                            
-                            db.delete(event)
-                            deleted_count += 1
-                    except Exception:
-                        continue
-                
-                if deleted_count > 0:
-                    db.commit()
-                    logger.info(f"Cleanup: Successfully removed {deleted_count} expired events.")
-            finally:
-                db.close()
-        except Exception as e:
-            logger.error(f"Cleanup Error: {e}")
-            
         await asyncio.sleep(600)
 
 @app.get("/search")
@@ -1011,6 +975,101 @@ def sign_upload(folder: str = "blogs", public_id: Optional[str] = None, current_
         "folder": params["folder"]
     }
 
+# --- Gallery Collections ---
+
+@app.post("/gallery/collections", response_model=schemas.GalleryCollectionResponse, status_code=status.HTTP_201_CREATED)
+def create_gallery_collection(collection: schemas.GalleryCollectionCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    new_collection = models.GalleryCollection(**collection.dict())
+    db.add(new_collection)
+    db.commit()
+    db.refresh(new_collection)
+    return new_collection
+
+@app.get("/gallery/collections", response_model=List[schemas.GalleryCollectionWithItems])
+def get_gallery_collections(type: Optional[str] = None, include_items: bool = False, db: Session = Depends(get_db)):
+    query = db.query(models.GalleryCollection)
+    if type:
+        query = query.filter(models.GalleryCollection.type == type)
+    
+    if include_items:
+        collections = query.options(joinedload(models.GalleryCollection.items)).order_by(models.GalleryCollection.order.asc(), models.GalleryCollection.created_at.desc()).all()
+        # Sort items within each collection by order
+        for coll in collections:
+            coll.items.sort(key=lambda x: x.order)
+        return collections
+        
+    return query.order_by(models.GalleryCollection.order.asc(), models.GalleryCollection.created_at.desc()).all()
+
+@app.get("/gallery/collections/{collection_id}", response_model=schemas.GalleryCollectionWithItems)
+def get_gallery_collection(collection_id: int, db: Session = Depends(get_db)):
+    collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.id == collection_id).first()
+    if not collection:
+        raise HTTPException(status_code=404, detail="Collection not found")
+    return collection
+
+@app.put("/gallery/collections/{collection_id}", response_model=schemas.GalleryCollectionResponse)
+def update_gallery_collection(collection_id: int, collection_data: schemas.GalleryCollectionUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    db_collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.id == collection_id).first()
+    if not db_collection:
+        raise HTTPException(status_code=404, detail="Collection not found")
+    
+    update_data = collection_data.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_collection, key, value)
+    
+    db.commit()
+    db.refresh(db_collection)
+    return db_collection
+
+@app.delete("/gallery/collections/{collection_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_gallery_collection(collection_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.id == collection_id).first()
+    if not collection:
+        raise HTTPException(status_code=404, detail="Collection not found")
+    
+    # 1. Delete all items from Cloudinary
+    for item in collection.items:
+        if item.public_id:
+            try:
+                resource_type = "video" if item.type == "video" else "image"
+                cloudinary.uploader.destroy(item.public_id, resource_type=resource_type, invalidate=True)
+            except Exception as e:
+                logger.error(f"Error deleting collection item from Cloudinary: {e}")
+    
+    # 2. Delete collection's featured image
+    if collection.featured_image_public_id:
+        try:
+            cloudinary.uploader.destroy(collection.featured_image_public_id, invalidate=True)
+        except Exception as e:
+            logger.error(f"Error deleting collection featured image: {e}")
+            
+    db.delete(collection)
+    db.commit()
+    return None
+
+@app.post("/gallery/collections/reorder")
+def reorder_gallery_collections(id_order: List[int], current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    try:
+        for index, coll_id in enumerate(id_order):
+            db.query(models.GalleryCollection).filter(models.GalleryCollection.id == coll_id).update({"order": index})
+        db.commit()
+        return {"message": "Collections reordered successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ==================== GALLERY ENDPOINTS ====================
 
 @app.post("/gallery", response_model=schemas.GalleryItemResponse, status_code=status.HTTP_201_CREATED)
@@ -1023,7 +1082,10 @@ def create_gallery_item(item: schemas.GalleryItemCreate, db: Session = Depends(g
         url=item.url,
         public_id=item.public_id,
         thumbnail_url=item.thumbnail_url,
-        title=item.title
+        title=item.title,
+        collection_id=item.collection_id,
+        collection_name=item.collection_name,
+        event_date=item.event_date
     )
     db.add(new_item)
     db.commit()
@@ -1071,9 +1133,15 @@ def update_gallery_item(
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     
-    # 1. Update Title / Alt Text
+    # 1. Update Title / Alt Text / Collection
     if item_data.title is not None:
         item.title = item_data.title
+    if item_data.collection_id is not None:
+        item.collection_id = item_data.collection_id
+    if item_data.collection_name is not None:
+        item.collection_name = item_data.collection_name
+    if item_data.event_date is not None:
+        item.event_date = item_data.event_date
     
     # 2. Handle Server-Side Cropping if provided
     # Only proceed if crop_data exists and is not empty
@@ -1162,6 +1230,47 @@ def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
         logger.exception("Error in get_events")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/events", response_model=List[schemas.EventResponse])
+def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
+    try:
+        query = db.query(models.Event)
+        if category:
+            query = query.filter(models.Event.category == category)
+        events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
+        return events
+    except Exception as e:
+        logger.exception("Error in get_events")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/admin/events/registrations", response_model=List[schemas.EventRegistrationListResponse])
+def get_all_registrations(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Get all event registrations for admin (requires authentication)"""
+    if current_user.role not in ["admin", "editor", "events_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    registrations = db.query(models.EventRegistration).options(joinedload(models.EventRegistration.event)).order_by(models.EventRegistration.created_at.desc()).all()
+    
+    # Map event_title to response
+    response_data = []
+    for reg in registrations:
+        reg_dict = {
+            "id": reg.id,
+            "event_id": reg.event_id,
+            "full_name": reg.full_name,
+            "email": reg.email,
+            "phone": reg.phone,
+            "ticket_id": reg.ticket_id,
+            "ticket_count": reg.ticket_count,
+            "child_ticket_count": reg.child_ticket_count,
+            "status": reg.status,
+            "created_at": reg.created_at,
+            "attendees": reg.attendees,
+            "event_title": reg.event.title if reg.event else "Unknown Event"
+        }
+        response_data.append(reg_dict)
+        
+    return response_data
+
 @app.get("/events/{slug}", response_model=schemas.EventResponse)
 def get_event(slug: str, db: Session = Depends(get_db)):
     # Try ID first for backward compatibility, then slug
@@ -1177,7 +1286,7 @@ def get_event(slug: str, db: Session = Depends(get_db)):
     return event
 
 @app.put("/events/{event_id}", response_model=schemas.EventResponse)
-def update_event(event_id: int, event_update: schemas.EventUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def update_event(event_id: int, event_update: schemas.EventUpdate, background_tasks: BackgroundTasks, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ["admin", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized to update events")
     
@@ -1187,13 +1296,20 @@ def update_event(event_id: int, event_update: schemas.EventUpdate, current_user:
     
     update_data = event_update.dict(exclude_unset=True)
     
-    # If a new image is being set, delete the old one from Cloudinary
+    # If a new image is being set, delete the old one from Cloudinary in background
     if "featured_image_public_id" in update_data and db_event.featured_image_public_id:
         if update_data["featured_image_public_id"] != db_event.featured_image_public_id:
-            try:
-                cloudinary.uploader.destroy(db_event.featured_image_public_id, invalidate=True)
-            except Exception as e:
-                print(f"Error deleting old event image from Cloudinary: {e}")
+            def delete_cloudinary_image(public_id):
+                try:
+                    cloudinary.uploader.destroy(public_id, invalidate=True)
+                except Exception as e:
+                    try:
+                        import logging
+                        logger = logging.getLogger(__name__)
+                        logger.exception(f"Error deleting old event image from Cloudinary: {e}")
+                    except:
+                        print(f"Error deleting old event image from Cloudinary: {e}")
+            background_tasks.add_task(delete_cloudinary_image, db_event.featured_image_public_id)
 
     for key, value in update_data.items():
         setattr(db_event, key, value)
@@ -1203,7 +1319,7 @@ def update_event(event_id: int, event_update: schemas.EventUpdate, current_user:
     return db_event
 
 @app.delete("/events/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_event(event_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def delete_event(event_id: int, background_tasks: BackgroundTasks, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ["admin", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized to delete events")
     
@@ -1211,12 +1327,20 @@ def delete_event(event_id: int, current_user: models.User = Depends(get_current_
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
     
-    # Delete image from Cloudinary if exists
+    # Delete image from Cloudinary in background to prevent blocking
     if event.featured_image_public_id:
-        try:
-            cloudinary.uploader.destroy(event.featured_image_public_id, invalidate=True)
-        except Exception as e:
-            print(f"Error deleting event image from Cloudinary: {e}")
+        def delete_cloudinary_image(public_id):
+            try:
+                cloudinary.uploader.destroy(public_id, invalidate=True)
+            except Exception as e:
+                try:
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.exception(f"Error deleting event image from Cloudinary: {e}")
+                except:
+                    print(f"Error deleting event image from Cloudinary: {e}")
+                    
+        background_tasks.add_task(delete_cloudinary_image, event.featured_image_public_id)
             
     db.delete(event)
     db.commit()
@@ -1244,11 +1368,22 @@ def register_for_event(event_id: int, registration: schemas.EventRegistrationCre
         if current_registrations >= event.max_attendees:
             raise HTTPException(status_code=400, detail="Event is already full")
 
+    # Generate a unique ticket ID (e.g., FC-A8B291)
+    def generate_ticket_id():
+        chars = string.ascii_uppercase + string.digits
+        return "FC-" + "".join(random.choices(chars, k=6))
+    
+    ticket_id = generate_ticket_id()
+    # Ensure it's unique
+    while db.query(models.EventRegistration).filter(models.EventRegistration.ticket_id == ticket_id).first():
+        ticket_id = generate_ticket_id()
+
     new_reg = models.EventRegistration(
         event_id=event_id,
         full_name=registration.full_name,
         email=registration.email,
         phone=registration.phone,
+        ticket_id=ticket_id,
         ticket_count=registration.ticket_count,
         child_ticket_count=registration.child_ticket_count,
         status="confirmed"
