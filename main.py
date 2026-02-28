@@ -117,27 +117,6 @@ async def global_exception_handler(request, exc):
 
 @app.on_event("startup")
 async def startup_db_client():
-    # Seed Admin User if not exists
-    db = next(get_db())
-    try:
-        # Check for admin user
-        admin_email = "admin@123"
-        admin_user = db.query(models.User).filter(models.User.username == admin_email).first()
-        
-        if not admin_user:
-            # Create default admin user
-            default_password = os.getenv("ADMIN_DEFAULT_PASSWORD", "fortunecityadmin@123")
-            hashed_pwd = get_password_hash(default_password)
-            
-            new_admin = models.User(username=admin_email, hashed_password=hashed_pwd)
-            db.add(new_admin)
-            db.commit()
-            logger.info(f"Admin user '{admin_email}' seeded successfully.")
-    except Exception as e:
-        logger.error(f"Error seeding database: {e}")
-    finally:
-        db.close()
-    
     # Start background cleanup task for expired events
     logger.info("Launching event cleanup background task...")
     asyncio.create_task(cleanup_expired_events_task())
@@ -324,12 +303,7 @@ def update_user(username: str, update_data: dict, current_user: models.User = De
             detail="Not authorized to update users"
         )
     
-    # Prevent updating the default admin account
-    if username == "admin@123":
-         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="The default admin account credentials cannot be modified"
-        )
+
 
     # Get the user to update
     user = db.query(models.User).filter(models.User.username == username).first()
@@ -380,12 +354,7 @@ def delete_user(username: str, current_user: models.User = Depends(get_current_u
             detail="You cannot delete your own account"
         )
         
-    # Prevent deleting the default admin account
-    if username == "admin@123":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="The default admin account cannot be deleted"
-        )
+
 
     user = db.query(models.User).filter(models.User.username == username).first()
     if not user:
