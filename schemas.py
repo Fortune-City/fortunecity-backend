@@ -165,6 +165,7 @@ class GalleryItemBase(BaseModel):
     collection_id: Optional[int] = None
     collection_name: Optional[str] = None
     event_date: Optional[str] = None
+    order: int = 0
 
 class GalleryItemCreate(GalleryItemBase):
     pass

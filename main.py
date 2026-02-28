@@ -731,6 +731,11 @@ def delete_image(public_id: str, current_user: models.User = Depends(get_current
             models.Event.featured_image_public_id: None
         }, synchronize_session=False)
 
+        # NEW: Delete from GalleryItem if it was archived there
+        db.query(models.GalleryItem).filter(
+            models.GalleryItem.public_id == public_id
+        ).delete(synchronize_session=False)
+
         db.commit()
 
         # 2. Delete from Cloudinary with full invalidation
@@ -861,7 +866,8 @@ async def upload_image(
     file: UploadFile = File(...), 
     public_id: Optional[str] = Form(None),
     folder: Optional[str] = Form("blogs"),
-    current_user: models.User = Depends(get_current_user)
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
     """Upload an image to Cloudinary. Optimized for speed and large files."""
     if current_user.role not in ["admin", "editor", "events_manager"]:
@@ -869,48 +875,49 @@ async def upload_image(
     
     try:
         is_video = "video" in folder.lower() or file.content_type.startswith("video/")
-        # Limits: Images: 10MB, Videos: 100MB
-        MAX_SIZE = (100 if is_video else 10) * 1024 * 1024
+        # Limits: Images: 20MB, Videos: 100MB (Increased image limit slightly for better quality)
+        MAX_SIZE = (100 if is_video else 20) * 1024 * 1024
         
-        # Check size without reading everything if possible, though UploadFile usually has it
+        # Check size without reading everything if possible
         file.file.seek(0, 2)
         actual_size = file.file.tell()
         file.file.seek(0)
 
         if actual_size > MAX_SIZE:
-             size_label = "100MB" if is_video else "10MB"
+             size_label = "100MB" if is_video else "20MB"
              raise HTTPException(status_code=400, detail=f"File too large. Maximum size for {'videos' if is_video else 'images'} is {size_label}.")
         
+        # Base folder
         base_folder = "fortune-city"
         final_folder = folder if folder.startswith(base_folder) else f"{base_folder}/{folder}"
 
-        # Deduplication / Public ID generation
+        # Initialize upload params
+        upload_params = {
+            "folder": final_folder,
+            "overwrite": True,
+            "resource_type": "image" if not is_video else "video",
+        }
+
+        # If not provided, generate a fresh name to avoid clobbering old formats
         if not public_id:
-            if is_video:
-                # Skip MD5 for videos to save time, use filename + timestamp
-                timestamp = str(int(datetime.now().timestamp()))
-                clean_name = "".join(c for c in file.filename if c.isalnum() or c in "._-").rstrip()
-                file_hash = f"{clean_name.split('.')[0]}_{timestamp}"
-            else:
-                # For images, MD5 is fast enough and useful for deduplication
-                file_content = await file.read()
-                file_hash = hashlib.md5(file_content).hexdigest()
-                await file.seek(0)
-            
-            upload_params = {
-                "public_id": file_hash,
-                "folder": final_folder,
-                "overwrite": True,
-                "resource_type": "auto",
-                "quality": "auto:good",
-                "fetch_format": "auto"
-            }
+            from datetime import datetime
+            import random
+            timestamp = str(int(datetime.now().timestamp()))
+            clean_name = "".join(c for c in file.filename if c.isalnum() or c in "._-").rstrip().split('.')[0]
+            # Use random prefix to guarantee uniqueness and bypass caches
+            unique_prefix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+            upload_params["public_id"] = f"{clean_name}_{unique_prefix}_{timestamp}"
         else:
-            upload_params = {
-                "public_id": public_id,
-                "overwrite": True,
-                "resource_type": "auto"
-            }
+            upload_params["public_id"] = public_id
+
+        # Forces WEBP strictly for images
+        if not is_video:
+            upload_params.update({
+                "format": "webp",
+                "transformation": [{"quality": "auto:best", "fetch_format": "webp"}]
+            })
+        
+        logger.info(f"Uploading {file.filename} as {upload_params.get('public_id')} to {final_folder} (is_video: {is_video})")
 
         # Use upload_large for large files or videos
         if is_video or actual_size > 10 * 1024 * 1024:
@@ -927,6 +934,38 @@ async def upload_image(
                 **upload_params
             )
         
+        logger.info(f"Upload complete. Final format: {result.get('format')}, URL: {result.get('secure_url')}")
+        
+        # --- NEW: Store like in gallery if it's a blog image ---
+        if not is_video and "blogs" in folder.lower():
+            try:
+                # 1. Find or create Blog Images collection
+                collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.name == "Blog Images").first()
+                if not collection:
+                    collection = models.GalleryCollection(
+                        name="Blog Images",
+                        description="Automatically archived images from blog posts",
+                        type="photo"
+                    )
+                    db.add(collection)
+                    db.flush()
+                
+                # 2. Add to GalleryItem
+                gallery_item = models.GalleryItem(
+                    type="photo",
+                    url=result.get("secure_url"),
+                    public_id=result.get("public_id"),
+                    title=file.filename.split('.')[0],
+                    collection_id=collection.id,
+                    collection_name=collection.name,
+                    order=0
+                )
+                db.add(gallery_item)
+                db.commit()
+            except Exception as e:
+                db.rollback()
+                logger.error(f"Failed to record blog image in gallery: {e}")
+        
         return {
             "public_id": result.get("public_id"),
             "secure_url": result.get("secure_url"),
@@ -940,6 +979,7 @@ async def upload_image(
         raise
     except Exception as e:
         logger.error(f"Upload Error: {e}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"File upload failed: {str(e)}")
 
 @app.get("/media/sign")
@@ -1008,6 +1048,9 @@ def get_gallery_collection(collection_id: int, db: Session = Depends(get_db)):
     collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.id == collection_id).first()
     if not collection:
         raise HTTPException(status_code=404, detail="Collection not found")
+    
+    # Sort items by order
+    collection.items.sort(key=lambda x: x.order)
     return collection
 
 @app.put("/gallery/collections/{collection_id}", response_model=schemas.GalleryCollectionResponse)
@@ -1110,10 +1153,31 @@ def delete_gallery_item(item_id: int, current_user: models.User = Depends(get_cu
     
     if item.public_id:
         try:
+            # Cascade Nullification for Blog Posts
+            db.query(models.BlogPost).filter(
+                models.BlogPost.featured_image.like(f"%{item.public_id}%")
+            ).update({models.BlogPost.featured_image: None}, synchronize_session=False)
+
+            # Cascade for User profile if used there
+            db.query(models.User).filter(
+                models.User.profile_image_public_id == item.public_id
+            ).update({
+                models.User.profile_image: None, 
+                models.User.profile_image_public_id: None
+            }, synchronize_session=False)
+
+            # Cascade for Events if used there
+            db.query(models.Event).filter(
+                models.Event.featured_image_public_id == item.public_id
+            ).update({
+                models.Event.featured_image: None,
+                models.Event.featured_image_public_id: None
+            }, synchronize_session=False)
+
             resource_type = "video" if item.type == "video" else "image"
             cloudinary.uploader.destroy(item.public_id, resource_type=resource_type, invalidate=True)
         except Exception as e:
-            logger.error(f"Error deleting from Cloudinary: {e}")
+            logger.error(f"Error during gallery item cascade/destroy from Cloudinary: {e}")
             
     db.delete(item)
     db.commit()
