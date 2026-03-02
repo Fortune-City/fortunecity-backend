@@ -905,36 +905,6 @@ async def upload_image(
         
         logger.info(f"Upload complete. Final format: {result.get('format')}, URL: {result.get('secure_url')}")
         
-        # --- NEW: Store like in gallery if it's a blog image ---
-        if not is_video and "blogs" in folder.lower():
-            try:
-                # 1. Find or create Blog Images collection
-                collection = db.query(models.GalleryCollection).filter(models.GalleryCollection.name == "Blog Images").first()
-                if not collection:
-                    collection = models.GalleryCollection(
-                        name="Blog Images",
-                        description="Automatically archived images from blog posts",
-                        type="photo"
-                    )
-                    db.add(collection)
-                    db.flush()
-                
-                # 2. Add to GalleryItem
-                gallery_item = models.GalleryItem(
-                    type="photo",
-                    url=result.get("secure_url"),
-                    public_id=result.get("public_id"),
-                    title=file.filename.split('.')[0],
-                    collection_id=collection.id,
-                    collection_name=collection.name,
-                    order=0
-                )
-                db.add(gallery_item)
-                db.commit()
-            except Exception as e:
-                db.rollback()
-                logger.error(f"Failed to record blog image in gallery: {e}")
-        
         return {
             "public_id": result.get("public_id"),
             "secure_url": result.get("secure_url"),
