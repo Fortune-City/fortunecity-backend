@@ -17,10 +17,24 @@ def migrate():
         ("events", "end_date", "VARCHAR"),
         ("events", "start_time", "VARCHAR"),
         ("events", "end_time", "VARCHAR"),
+        ("events", "registration_start_date", "VARCHAR"),
+        ("events", "registration_end_date", "VARCHAR"),
         ("events", "order", "INTEGER DEFAULT 0"),
+        
+        # Users table
+        ("users", "role", "VARCHAR DEFAULT 'admin'"),
+        ("users", "nickname", "VARCHAR"),
+        ("users", "last_login", "TIMESTAMP"),
+        ("users", "profile_image", "VARCHAR"),
+        ("users", "profile_image_public_id", "VARCHAR"),
+        
+        # Blog Posts table
+        ("blog_posts", "seo_data", "JSONB DEFAULT '{}'"),
         
         # Event Registrations table
         ("event_registrations", "child_ticket_count", "INTEGER DEFAULT 0"),
+        ("event_registrations", "ticket_id", "VARCHAR"),
+        ("event_registrations", "status", "VARCHAR DEFAULT 'confirmed'"),
         
         # Gallery Items table
         ("gallery_items", "collection_name", "VARCHAR"),
