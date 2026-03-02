@@ -200,6 +200,16 @@ def health_check(db: Session = Depends(get_db)):
     except Exception as e:
         return {"status": "error", "database": str(e)}
 
+@app.get("/migrate-db")
+def run_migrations(db: Session = Depends(get_db)):
+    """Temporary endpoint to run database migrations on production."""
+    try:
+        from migrate_db_v2 import migrate as run_migrate
+        run_migrate()
+        return {"message": "Migrations completed successfully. Check logs for details."}
+    except Exception as e:
+        return {"message": f"Migration failed: {str(e)}", "traceback": traceback.format_exc()}
+
 @app.post("/login", response_model=schemas.Token)
 def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     # query user by username
