@@ -45,11 +45,8 @@ app = FastAPI(title="Fortune City API")
 # Security & Performance Middleware Stack
 # Note: Last added = first executed for requests.
 
-# 3. GZip Compression (Inner-most)
-from fastapi.middleware.gzip import GZipMiddleware
-app.add_middleware(GZipMiddleware, minimum_size=1000)
 
-# 2. CORS Policy (Outer-middle)
+# 1. CORS Policy (Outer-most for responses)
 origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174")
 origins = [origin.strip() for origin in origins_str.split(",")]
 app.add_middleware(
@@ -60,6 +57,10 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]
 )
+
+# 2. GZip Compression
+from fastapi.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # 1. Trusted Host (Outer-most - runs first)
 allowed_hosts_str = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
@@ -109,9 +110,19 @@ from fastapi.responses import JSONResponse
 async def global_exception_handler(request, exc):
     logger.error(f"Unhandled Exception: {exc}")
     logger.error(traceback.format_exc())
+    
+    # Return 500 even if it's a validation error to prevent leaking details
+    # We include CORS header manually here as exception handlers can sometimes bypass middleware
+    headers = {}
+    origin = request.headers.get("origin")
+    if origin in origins:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+
     return JSONResponse(
         status_code=500,
-        content={"detail": "An internal server error occurred. Please contact support."}
+        content={"detail": f"Internal Server Error: {str(exc)}"},
+        headers=headers
     )
 
 
@@ -1220,18 +1231,6 @@ def create_event(event: schemas.EventCreate, current_user: models.User = Depends
     db.commit()
     db.refresh(new_event)
     return new_event
-
-@app.get("/events", response_model=List[schemas.EventResponse])
-def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
-    try:
-        query = db.query(models.Event)
-        if category:
-            query = query.filter(models.Event.category == category)
-        events = query.order_by(models.Event.order.asc(), models.Event.created_at.desc()).all()
-        return events
-    except Exception as e:
-        logger.exception("Error in get_events")
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/events", response_model=List[schemas.EventResponse])
 def get_events(category: Optional[str] = None, db: Session = Depends(get_db)):
