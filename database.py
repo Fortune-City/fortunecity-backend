@@ -10,8 +10,7 @@ load_dotenv()
 # format: postgresql://user:password@server/db
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 if not SQLALCHEMY_DATABASE_URL:
-    # Fallback for local development if .env is missing (optional, but good for quick start)
-    SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password@localhost/fortunecity"
+    raise RuntimeError("DATABASE_URL must be set in environment variables")
 
 # Optimization: Connection pooling limits to prevent backend from overwhelming the DB
 engine = create_engine(

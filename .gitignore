@@ -39,3 +39,4 @@ venv.bak/
 # Database files
 *.sqlite3
 *.db
+backend.log
