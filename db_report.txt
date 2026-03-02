@@ -28,6 +28,8 @@ Table: events
   - external_registration_url (VARCHAR)
   - child_registration_fee (VARCHAR)
   - child_age_limit (VARCHAR)
+  - registration_start_date (VARCHAR)
+  - registration_end_date (VARCHAR)
   [OK] is_registration_enabled exists
   [OK] registration_fee exists
   [OK] child_registration_fee exists
@@ -45,4 +47,5 @@ Table: event_registrations
   - status (VARCHAR)
   - created_at (TIMESTAMP)
   - child_ticket_count (INTEGER)
+  - ticket_id (VARCHAR)
   [OK] child_ticket_count exists
