@@ -20,6 +20,7 @@ def migrate():
         ("events", "registration_start_date", "VARCHAR"),
         ("events", "registration_end_date", "VARCHAR"),
         ("events", "order", "INTEGER DEFAULT 0"),
+        ("events", "featured_image_alt", "VARCHAR"),
         
         # Users table
         ("users", "role", "VARCHAR DEFAULT 'admin'"),
@@ -30,6 +31,7 @@ def migrate():
         
         # Blog Posts table
         ("blog_posts", "seo_data", "JSONB DEFAULT '{}'"),
+        ("blog_posts", "tags", "JSONB DEFAULT '[]'"),
         
         # Event Registrations table
         ("event_registrations", "child_ticket_count", "INTEGER DEFAULT 0"),

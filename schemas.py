@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
-from datetime import datetime
+from datetime import datetime, date
 
 class UserLogin(BaseModel):
     username: str
@@ -52,6 +52,7 @@ class BlogPostBase(BaseModel):
     featured_image_alt: Optional[str] = None
     status: Optional[str] = "draft"
     slug: Optional[str] = None
+    tags: Optional[List[str]] = []
     seo: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime] = None
 
@@ -66,6 +67,7 @@ class BlogPostUpdate(BaseModel):
     featured_image_alt: Optional[str] = None
     status: Optional[str] = None
     slug: Optional[str] = None
+    tags: Optional[List[str]] = None
     seo: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime] = None
 
@@ -75,6 +77,7 @@ class BlogPostResponse(BlogPostBase):
     created_at: datetime
     updated_at: datetime
     seo: Optional[Dict[str, Any]] = Field(None, alias="seo_data")
+    tags: Optional[List[str]] = []
 
     class Config:
         from_attributes = True
@@ -208,6 +211,7 @@ class EventBase(BaseModel):
     address: Optional[str] = None
     map_url: Optional[str] = None
     featured_image_public_id: Optional[str] = None
+    featured_image_alt: Optional[str] = None
     organizer_name: Optional[str] = None
     organizer_phone: Optional[str] = None
     organizer_email: Optional[str] = None
@@ -226,7 +230,7 @@ class EventCreate(EventBase):
     title: str
     description: str
     start_date: str
-    end_date: str
+    end_date: Optional[str] = None
     featured_image: str
 
 class EventUpdate(BaseModel):
@@ -244,6 +248,7 @@ class EventUpdate(BaseModel):
     address: Optional[str] = None
     map_url: Optional[str] = None
     featured_image_public_id: Optional[str] = None
+    featured_image_alt: Optional[str] = None
     organizer_name: Optional[str] = None
     organizer_phone: Optional[str] = None
     organizer_email: Optional[str] = None
@@ -314,3 +319,47 @@ class DashboardStats(BaseModel):
     total_subscribers: int
     total_enquiries: int
     total_registrations: int
+
+# Theater & Movie Schemas
+class TheaterBase(BaseModel):
+    name: str
+    screens_count: int
+
+class TheaterResponse(TheaterBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class MovieBase(BaseModel):
+    theater_id: int
+    title: str
+    poster_url: Optional[str] = None
+    poster_public_id: Optional[str] = None
+    screen_number: int
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    show_timings: List[str] = []
+    booking_link: Optional[str] = None
+    status: str = "active"
+
+class MovieCreate(MovieBase):
+    pass
+
+class MovieUpdate(BaseModel):
+    title: Optional[str] = None
+    poster_url: Optional[str] = None
+    poster_public_id: Optional[str] = None
+    screen_number: Optional[int] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    show_timings: Optional[List[str]] = None
+    booking_link: Optional[str] = None
+    status: Optional[str] = None
+
+class MovieResponse(MovieBase):
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True

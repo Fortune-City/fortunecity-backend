@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, Text, JSON, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, Text, JSON, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from database import Base
 from datetime import datetime
@@ -38,6 +38,7 @@ class BlogPost(Base):
     featured_image_alt = Column(String, nullable=True)
     status = Column(String, default="draft", index=True) # draft, published, trash
     author_id = Column(Integer, index=True)
+    tags = Column(JSON, nullable=True, default=list)
     seo_data = Column(JSON, nullable=True, default=dict)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -119,6 +120,7 @@ class Event(Base):
     map_url = Column(Text, nullable=True)
     featured_image = Column(String, nullable=True)
     featured_image_public_id = Column(String, nullable=True)
+    featured_image_alt = Column(String, nullable=True)
     organizer_name = Column(String, nullable=True)
     organizer_phone = Column(String, nullable=True)
     organizer_email = Column(String, nullable=True)
@@ -170,3 +172,30 @@ class Attendee(Base):
 
     # Relationship
     registration = relationship("EventRegistration", back_populates="attendees")
+
+class Theater(Base):
+    __tablename__ = "theaters"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    screens_count = Column(Integer, default=1)
+    
+    movies = relationship("Movie", back_populates="theater", cascade="all, delete-orphan")
+
+class Movie(Base):
+    __tablename__ = "movies"
+
+    id = Column(Integer, primary_key=True, index=True)
+    theater_id = Column(Integer, ForeignKey("theaters.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String, index=True)
+    poster_url = Column(String, nullable=True)
+    poster_public_id = Column(String, nullable=True)
+    screen_number = Column(Integer, index=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+    show_timings = Column(JSON, nullable=True, default=list) # List of strings
+    booking_link = Column(String, nullable=True)
+    status = Column(String, default="active", index=True) # active, hidden
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    theater = relationship("Theater", back_populates="movies")

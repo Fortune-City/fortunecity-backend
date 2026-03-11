@@ -1236,6 +1236,9 @@ def create_event(event: schemas.EventCreate, current_user: models.User = Depends
             counter += 1
         event_data["slug"] = slug
         
+    if not event_data.get("end_date"):
+        event_data["end_date"] = event_data.get("start_date")
+        
     new_event = models.Event(**event_data)
     db.add(new_event)
     db.commit()
@@ -1469,12 +1472,189 @@ def reorder_events(id_order: List[int], current_user: models.User = Depends(get_
     if current_user.role not in ["admin", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
-    try:
-        # Use a more efficient update method if many events, but this is fine for dozens
-        for index, event_id in enumerate(id_order):
-            db.query(models.Event).filter(models.Event.id == event_id).update({"order": index})
-        db.commit()
-        return {"message": "Order updated successfully"}
-    except Exception as e:
-        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== THEATER & MOVIE ENDPOINTS ====================
+
+@app.get("/theaters", response_model=List[schemas.TheaterResponse])
+def get_theaters(db: Session = Depends(get_db)):
+    """Fetch all theaters."""
+    return db.query(models.Theater).all()
+
+@app.get("/theaters/{theater_id}/movies", response_model=List[schemas.MovieResponse])
+def get_theater_movies(theater_id: int, db: Session = Depends(get_db)):
+    """Fetch all movies for a specific theater."""
+    return db.query(models.Movie).filter(models.Movie.theater_id == theater_id).all()
+
+@app.post("/movies", response_model=schemas.MovieResponse)
+async def create_movie(
+    theater_id: int = Form(...),
+    title: str = Form(...),
+    screen_number: int = Form(...),
+    start_date: Optional[str] = Form(None),
+    end_date: Optional[str] = Form(None),
+    show_timings: str = Form(...), # Expecting JSON string of list
+    booking_link: Optional[str] = Form(None),
+    status: str = Form("active"),
+    poster: UploadFile = File(None),
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Add a new movie with poster upload (restricted to admin/theater_manager)."""
+    if current_user.role not in ["admin", "theater_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    import json
+    try:
+        timings = json.loads(show_timings)
+    except:
+        timings = [t.strip() for t in show_timings.split(",") if t.strip()]
+
+    poster_url = None
+    poster_public_id = None
+
+    if poster:
+        # 1MB size limit check
+        contents = await poster.read()
+        if len(contents) > 1 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="Poster size must be less than 1MB")
+        await poster.seek(0)
+
+        try:
+            # Upload with auto-conversion to WebP
+            upload_result = cloudinary.uploader.upload(
+                poster.file,
+                folder="fortune-city/movies",
+                format="webp"
+            )
+            poster_url = upload_result.get("secure_url")
+            poster_public_id = upload_result.get("public_id")
+        except Exception as e:
+            logger.error(f"Poster upload failed: {e}")
+            raise HTTPException(status_code=500, detail="Failed to upload poster")
+
+    new_movie = models.Movie(
+        theater_id=theater_id,
+        title=title,
+        screen_number=screen_number,
+        start_date=start_date,
+        end_date=end_date,
+        show_timings=timings,
+        booking_link=booking_link,
+        status=status,
+        poster_url=poster_url,
+        poster_public_id=poster_public_id
+    )
+    db.add(new_movie)
+    db.commit()
+    db.refresh(new_movie)
+    return new_movie
+
+@app.put("/movies/{movie_id}", response_model=schemas.MovieResponse)
+async def update_movie(
+    movie_id: int,
+    theater_id: Optional[int] = Form(None),
+    title: Optional[str] = Form(None),
+    screen_number: Optional[int] = Form(None),
+    start_date: Optional[str] = Form(None),
+    end_date: Optional[str] = Form(None),
+    show_timings: Optional[str] = Form(None),
+    booking_link: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    poster: UploadFile = File(None),
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update an existing movie (restricted to admin/theater_manager)."""
+    if current_user.role not in ["admin", "theater_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    db_movie = db.query(models.Movie).filter(models.Movie.id == movie_id).first()
+    if not db_movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    
+    if theater_id is not None: db_movie.theater_id = theater_id
+    if title is not None: db_movie.title = title
+    if screen_number is not None: db_movie.screen_number = screen_number
+    if start_date is not None: db_movie.start_date = start_date
+    if end_date is not None: db_movie.end_date = end_date
+    if status is not None: db_movie.status = status
+    if booking_link is not None: db_movie.booking_link = booking_link
+    
+    if show_timings is not None:
+        import json
+        try:
+            db_movie.show_timings = json.loads(show_timings)
+        except:
+            db_movie.show_timings = [t.strip() for t in show_timings.split(",") if t.strip()]
+
+    if poster:
+        # 1MB size limit check
+        contents = await poster.read()
+        if len(contents) > 1 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="Poster size must be less than 1MB")
+        await poster.seek(0)
+
+        try:
+            # Delete old poster if exists
+            if db_movie.poster_public_id:
+                cloudinary.uploader.destroy(db_movie.poster_public_id)
+            
+            # Upload new poster with auto-conversion to WebP
+            upload_result = cloudinary.uploader.upload(
+                poster.file,
+                folder="fortune-city/movies",
+                format="webp"
+            )
+            db_movie.poster_url = upload_result.get("secure_url")
+            db_movie.poster_public_id = upload_result.get("public_id")
+        except Exception as e:
+            logger.error(f"Poster update failed: {e}")
+            raise HTTPException(status_code=500, detail="Failed to upload new poster")
+
+    db.commit()
+    db.refresh(db_movie)
+    return db_movie
+
+@app.delete("/movies/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_movie(movie_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Delete a movie (restricted to admin/theater_manager)."""
+    if current_user.role not in ["admin", "theater_manager"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    movie = db.query(models.Movie).filter(models.Movie.id == movie_id).first()
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    
+    # Delete from Cloudinary
+    if movie.poster_public_id:
+        try:
+            cloudinary.uploader.destroy(movie.poster_public_id)
+        except:
+            pass
+            
+    db.delete(movie)
+    db.commit()
+    return None
+
+def seed_theaters(db: Session):
+    """Seed initial theaters if they don't exist."""
+    theaters = [
+        {"name": "Picture Time", "screens_count": 4},
+        {"name": "Pride Cinemas", "screens_count": 9}
+    ]
+    for t_data in theaters:
+        exists = db.query(models.Theater).filter(models.Theater.name == t_data["name"]).first()
+        if not exists:
+            new_t = models.Theater(name=t_data["name"], screens_count=t_data["screens_count"])
+            db.add(new_t)
+    db.commit()
+
+@app.on_event("startup")
+async def startup_event():
+    db = next(get_db())
+    try:
+        seed_theaters(db)
+        logger.info("Theaters seeded successfully.")
+    finally:
+        db.close()
