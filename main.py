@@ -487,6 +487,7 @@ def create_blog_post(post: schemas.BlogPostCreate, current_user: models.User = D
         featured_image_alt=post.featured_image_alt,
         status=post.status,
         slug=post.slug,
+        tags=post.tags,
         seo_data=post.seo,
         author_id=current_user.id,
         created_at=post.created_at if post.created_at else datetime.utcnow()
