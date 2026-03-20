@@ -126,18 +126,42 @@ async def global_exception_handler(request, exc):
     )
 
 
-@app.on_event("startup")
-async def startup_db_client():
-    # Start background cleanup task for expired events
-    logger.info("Launching event cleanup background task...")
-    asyncio.create_task(cleanup_expired_events_task())
-
 # Configure Cloudinary globally once
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
+
+LOGO_URL = "https://res.cloudinary.com/doazatm15/image/upload/v1774003284/001_FC_Fortune_City_Logo_B_3_ficepn.png" # User provided logo
+
+async def upload_logo_to_cloudinary():
+    global LOGO_URL
+    try:
+        # Path to light mode logo in frontend assets
+        logo_path = os.path.join(os.path.dirname(os.getcwd()), "frontend", "src", "assets", "light mode logo.webp")
+        if os.path.exists(logo_path):
+            result = cloudinary.uploader.upload(
+                logo_path,
+                public_id="fortune_city_email_logo",
+                overwrite=True,
+                folder="branding"
+            )
+            LOGO_URL = result.get("secure_url")
+            logger.info(f"Logo uploaded to Cloudinary for emails: {LOGO_URL}")
+        else:
+            logger.warning(f"Logo file not found at {logo_path}, using fallback.")
+    except Exception as e:
+        logger.error(f"Failed to upload logo to Cloudinary: {e}")
+
+@app.on_event("startup")
+async def startup_db_client():
+    # Start background cleanup task for expired events
+    logger.info("Launching event cleanup background task...")
+    asyncio.create_task(cleanup_expired_events_task())
+    # Using specific logo URL provided by user
+    # asyncio.create_task(upload_logo_to_cloudinary())
+    pass
 
 async def cleanup_expired_events_task():
     """Background task previously used to remove events, now disabled placeholder."""
@@ -389,7 +413,7 @@ def delete_user(username: str, current_user: models.User = Depends(get_current_u
 
 # --- Subscriber Endpoints ---
 @app.post("/subscribe", response_model=schemas.SubscriberResponse, status_code=status.HTTP_201_CREATED)
-def subscribe_newsletter(subscriber: schemas.SubscriberCreate, db: Session = Depends(get_db)):
+def subscribe_newsletter(subscriber: schemas.SubscriberCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # Check if email exists
     existing_subscriber = db.query(models.Subscriber).filter(models.Subscriber.email == subscriber.email).first()
     if existing_subscriber:
@@ -399,18 +423,22 @@ def subscribe_newsletter(subscriber: schemas.SubscriberCreate, db: Session = Dep
     db.add(new_subscriber)
     db.commit()
     db.refresh(new_subscriber)
+    
+    # Send welcome email in background
+    background_tasks.add_task(send_subscriber_welcome_email, new_subscriber.email, new_subscriber.name)
+    
     return new_subscriber
 
 @app.get("/admin/subscribers", response_model=List[schemas.SubscriberResponse])
 def get_subscribers(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if current_user.role != "admin":
+    if current_user.role not in ["admin", "enquiry_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     return db.query(models.Subscriber).order_by(models.Subscriber.created_at.desc()).all()
 
 @app.delete("/admin/subscribers/{subscriber_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_subscriber(subscriber_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if current_user.role != "admin":
+    if current_user.role not in ["admin", "enquiry_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     subscriber = db.query(models.Subscriber).filter(models.Subscriber.id == subscriber_id).first()
@@ -423,8 +451,234 @@ def delete_subscriber(subscriber_id: int, current_user: models.User = Depends(ge
 
 # --- Contact Enquiries ---
 
+import urllib.request
+import json
+import ssl
+import resend
+
+def send_subscriber_welcome_email(email_address: str, name: str = None):
+    api_key = os.getenv("RESEND_API_KEY")
+    if not api_key:
+        logger.warning("RESEND_API_KEY not found in environment")
+        return
+    
+    resend.api_key = api_key
+    from_email = "noreply@fortunecity.in"
+    
+    try:
+        display_name = name if name else "Subscriber"
+        html_content = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 0; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 1px solid #eee;">
+                <img src="{LOGO_URL}" alt="Fortune City" style="max-height: 100px; width: auto; display: block; margin: 0 auto;">
+            </div>
+            <div style="padding: 30px;">
+                <h2 style="color: #333; margin-top: 0;">Welcome to Fortune City!</h2>
+            <p>Hi {display_name},</p>
+            <p>Thank you for subscribing to our newsletter! You've successfully joined our community.</p>
+            <p>You will now receive the latest updates about <strong>Fortune City</strong> and details about our upcoming events directly in your inbox.</p>
+            <p>Stay tuned for exciting news!</p>
+            <br>
+            <br>
+            <p>Best Regards,<br>The Fortune City Team</p>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #eee;">
+                <p style="font-size: 12px; color: #999; margin: 0;">If you didn't mean to subscribe, please ignore this email.</p>
+                <p style="font-size: 11px; color: #bbb; margin-top: 5px;">© 2026 Fortune City. All rights reserved.</p>
+            </div>
+        </div>
+        """
+        
+        params = {
+            "from": f"Fortune City <{from_email}>",
+            "to": [email_address],
+            "subject": "Thank you for subscribing to Fortune City!",
+            "html": html_content,
+        }
+        
+        email = resend.Emails.send(params)
+        logger.info(f"Welcome email sent to {email_address}. ID: {email.get('id')}")
+        
+    except Exception as e:
+        logger.error(f"Failed to send welcome email to {email_address}: {str(e)}")
+        logger.error(traceback.format_exc())
+
+def send_enquiry_email(data: dict):
+    api_key = os.getenv("RESEND_API_KEY")
+    if not api_key:
+        logger.warning("RESEND_API_KEY not found in environment")
+        return
+    
+    resend.api_key = api_key
+    from_email = "noreply@fortunecity.in"
+    to_email = "social@texvalley.info"
+    
+    try:
+        html_content = f"""
+        <h3>New Website Enquiry</h3>
+        <p><strong>Name:</strong> {data['name']}</p>
+        <p><strong>Email:</strong> {data['email']}</p>
+        <p><strong>Phone:</strong> {data['phone']}</p>
+        <p><strong>Message:</strong></p>
+        <p style="white-space: pre-wrap;">{data['message']}</p>
+        <hr>
+        <p><small>Enquiry ID: {data['id']} | Date: {data['date']}</small></p>
+        """
+        
+        params = {
+            "from": f"Fortune City Enquiry <{from_email}>",
+            "to": [to_email],
+            "subject": f"New Enquiry from {data['name']}",
+            "html": html_content,
+        }
+        
+        email = resend.Emails.send(params)
+        logger.info(f"Enquiry email sent successfully. ID: {email.get('id')}")
+        
+    except Exception as e:
+        logger.error(f"Failed to send enquiry email via Resend: {str(e)}")
+        logger.error(traceback.format_exc())
+
+def format_time_12h(time_str):
+    if not time_str:
+        return ""
+    try:
+        # Try common formats
+        for fmt in ("%H:%M:%S", "%H:%M", "%I:%M %p", "%I:%M%p"):
+            try:
+                dt = datetime.strptime(time_str, fmt)
+                return dt.strftime("%I:%M %p")
+            except ValueError:
+                continue
+        return time_str # Return original if no format matches
+    except:
+        return time_str
+
+def send_event_notification_to_subscribers(event_id: int, is_update: bool = False):
+    api_key = os.getenv("RESEND_API_KEY")
+    if not api_key:
+        logger.warning("RESEND_API_KEY not found in environment")
+        return
+    
+    db = next(get_db())
+    try:
+        event = db.query(models.Event).filter(models.Event.id == event_id).first()
+        if not event:
+            return
+            
+        subscribers = db.query(models.Subscriber).all()
+        if not subscribers:
+            return
+            
+        resend.api_key = api_key
+        from_email = "noreply@fortunecity.in"
+        base_url = "https://fortunecity.in"
+        
+        # Format Date and Time
+        date_display = event.date or event.start_date
+        if event.start_date and event.end_date and event.start_date != event.end_date:
+            date_display = f"{event.start_date} - {event.end_date}"
+        
+        time_display = event.time or ""
+        if event.start_time:
+            time_display = format_time_12h(event.start_time)
+            if event.end_time:
+                time_display += f" - {format_time_12h(event.end_time)}"
+        
+        subject = f"New Event: {event.title}" if not is_update else f"Event Updated: {event.title}"
+        header_text = "New Event" if not is_update else "Event Updated"
+
+        for sub in subscribers:
+            try:
+                display_name = sub.name if sub.name else "Subscriber"
+                html_content = f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 0; border-radius: 8px; overflow: hidden;">
+                    <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 1px solid #eee;">
+                        <img src="{LOGO_URL}" alt="Fortune City" style="max-height: 80px; width: auto; display: block; margin: 0 auto;">
+                    </div>
+                    <div style="padding: 30px;">
+                        <div style="display: inline-block; background-color: {'#E0C287' if is_update else '#000'}; color: {'#000' if is_update else '#E0C287'}; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">
+                            {header_text}
+                        </div>
+                        <h2 style="color: #333; margin-top: 0;">{event.title}</h2>
+                        <p>Hi {display_name},</p>
+                        <p>{"We are excited to announce a new event at Fortune City!" if not is_update else "An event you might be interested in has been updated with new details."}</p>
+                        
+                        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #E0C287;">
+                            <h3 style="margin-top: 0; color: #333;">Event Details</h3>
+                            <p style="margin-bottom: 8px; margin-top: 10px;"><strong>📅 Date:</strong> {date_display}</p>
+                            {f'<p style="margin-bottom: 8px;"><strong>⏰ Time:</strong> {time_display}</p>' if time_display else ''}
+                            <p style="margin-bottom: 8px;"><strong>📍 Location:</strong> {event.location}</p>
+                            {f'<p style="margin-bottom: 8px;"><strong>🏷️ Category:</strong> {event.category}</p>' if event.category else ''}
+                        </div>
+                        
+                        <p style="color: #555; line-height: 1.6;">{event.description[:250] + "..." if event.description and len(event.description) > 250 else event.description}</p>
+                        
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="{base_url}/events/{event.slug}" style="background-color: #000; color: #E0C287; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">View Full Details</a>
+                        </div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eee;">
+                        <p style="font-size: 11px; color: #bbb; margin: 0;">© 2026 Fortune City. All rights reserved.</p>
+                        <p style="font-size: 10px; color: #ccc; margin-top: 5px;">You are receiving this because you subscribed to Fortune City updates.</p>
+                    </div>
+                </div>
+                """
+                
+                resend.Emails.send({
+                    "from": f"Fortune City <{from_email}>",
+                    "to": [sub.email],
+                    "subject": subject,
+                    "html": html_content,
+                })
+            except Exception as e:
+                logger.error(f"Failed to send event notification to {sub.email}: {str(e)}")
+                
+        logger.info(f"Event notification blast sent for event ID {event_id} ({'Update' if is_update else 'New'}) to {len(subscribers)} subscribers.")
+        
+    except Exception as e:
+        logger.error(f"Failed to send event notifications: {str(e)}")
+        logger.error(traceback.format_exc())
+    finally:
+        db.close()
+
+def trigger_google_sheet_webhook(data: dict):
+    webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
+    if not webhook_url:
+        logger.warning("GOOGLE_SHEET_WEBHOOK_URL not found in environment")
+        return
+    
+    logger.info(f"Attempting to send enquiry to Google Sheet: {webhook_url}")
+    try:
+        # Use json data
+        json_data = json.dumps(data).encode("utf-8")
+        
+        # Create a custom Opener to follow redirects automatically (which Google Apps Script does)
+        # and ignore SSL verify if needed
+        req = urllib.request.Request(
+            webhook_url, 
+            data=json_data, 
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        
+        # ssl context to avoid证书 issues
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+
+        with urllib.request.urlopen(req, timeout=15, context=ctx) as response:
+            status = response.getcode()
+            body = response.read().decode("utf-8")
+            logger.info(f"Google Sheet Response Status: {status}")
+            logger.debug(f"Google Sheet Response Body: {body}")
+            
+    except Exception as e:
+        logger.error(f"Failed to send enquiry to Google Sheet: {str(e)}")
+        logger.error(traceback.format_exc())
+
 @app.post("/contact", response_model=schemas.ContactEnquiryResponse, status_code=status.HTTP_201_CREATED)
-def create_contact_enquiry(enquiry: schemas.ContactEnquiryCreate, db: Session = Depends(get_db)):
+def create_contact_enquiry(enquiry: schemas.ContactEnquiryCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     new_enquiry = models.ContactEnquiry(
         name=enquiry.name,
         email=enquiry.email,
@@ -434,12 +688,24 @@ def create_contact_enquiry(enquiry: schemas.ContactEnquiryCreate, db: Session = 
     db.add(new_enquiry)
     db.commit()
     db.refresh(new_enquiry)
+
+    enquiry_data = {
+        "id": new_enquiry.id,
+        "name": new_enquiry.name,
+        "email": new_enquiry.email,
+        "phone": new_enquiry.phone,
+        "message": new_enquiry.message,
+        "date": new_enquiry.created_at.isoformat()
+    }
+    background_tasks.add_task(trigger_google_sheet_webhook, enquiry_data)
+    background_tasks.add_task(send_enquiry_email, enquiry_data)
+
     return new_enquiry
 
 @app.get("/contact", response_model=List[schemas.ContactEnquiryResponse])
 def get_contact_enquiries(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    # Only admin can view enquiries
-    if current_user.role != "admin":
+    # Only admin and enquiry manager can view enquiries
+    if current_user.role not in ["admin", "enquiry_manager"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to view enquiries"
@@ -448,7 +714,7 @@ def get_contact_enquiries(current_user: models.User = Depends(get_current_user),
 
 @app.delete("/contact/{enquiry_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_contact_enquiry(enquiry_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if current_user.role != "admin":
+    if current_user.role not in ["admin", "enquiry_manager"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to delete enquiries"
@@ -1221,7 +1487,7 @@ def reorder_gallery(id_order: List[int], current_user: models.User = Depends(get
 # ==================== EVENT ENDPOINTS ====================
 
 @app.post("/events", response_model=schemas.EventResponse, status_code=status.HTTP_201_CREATED)
-def create_event(event: schemas.EventCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def create_event(event: schemas.EventCreate, background_tasks: BackgroundTasks, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ["admin", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized to create events")
     
@@ -1244,6 +1510,10 @@ def create_event(event: schemas.EventCreate, current_user: models.User = Depends
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
+    
+    # Notify subscribers about the new event
+    background_tasks.add_task(send_event_notification_to_subscribers, new_event.id)
+    
     return new_event
 
 @app.get("/events", response_model=List[schemas.EventResponse])
@@ -1332,6 +1602,10 @@ def update_event(event_id: int, event_update: schemas.EventUpdate, background_ta
     
     db.commit()
     db.refresh(db_event)
+    
+    # Notify subscribers about the update
+    background_tasks.add_task(send_event_notification_to_subscribers, db_event.id, True)
+    
     return db_event
 
 @app.delete("/events/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -1473,6 +1747,13 @@ def reorder_events(id_order: List[int], current_user: models.User = Depends(get_
     if current_user.role not in ["admin", "events_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
+    try:
+        for index, event_id in enumerate(id_order):
+            db.query(models.Event).filter(models.Event.id == event_id).update({"order": index})
+        db.commit()
+        return {"message": "Events reordered successfully"}
+    except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== THEATER & MOVIE ENDPOINTS ====================

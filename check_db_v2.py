@@ -1,4 +1,9 @@
 import os
+import sys
+
+# Add the current directory to sys.path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from sqlalchemy import text, inspect
 from database import engine
 
@@ -8,12 +13,12 @@ def check_db():
     
     report.append(f"Database URL: {engine.url}")
     
-    tables = ["events", "event_registrations"]
+    tables = inspector.get_table_names()
     for table_name in tables:
         report.append(f"\nTable: {table_name}")
-        if not inspector.has_table(table_name):
-            report.append(f"  ERROR: Table '{table_name}' does not exist!")
-            continue
+        # if not inspector.has_table(table_name):
+        #     report.append(f"  ERROR: Table '{table_name}' does not exist!")
+        #     continue
             
         columns = inspector.get_columns(table_name)
         col_names = [col['name'] for col in columns]
