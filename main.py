@@ -1723,7 +1723,7 @@ def delete_registration(registration_id: int, current_user: models.User = Depend
 def get_dashboard_stats(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Fetch analytics for the dashboard"""
     # Only allow admin and authorized users
-    if current_user.role not in ["admin", "editor", "events_manager"]:
+    if current_user.role not in ["admin", "editor", "events_manager", "enquiry_manager", "theater_manager"]:
         raise HTTPException(status_code=403, detail="Not authorized")
         
     total_posts = db.query(models.BlogPost).count()
