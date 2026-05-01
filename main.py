@@ -463,7 +463,7 @@ def send_subscriber_welcome_email(email_address: str, name: str = None):
         return
     
     resend.api_key = api_key
-    from_email = "noreply@fortunecity.in"
+    from_email = "noreply@mail.fortunecity.in"
     
     try:
         display_name = name if name else "Subscriber"
@@ -510,7 +510,7 @@ def send_enquiry_email(data: dict):
         return
     
     resend.api_key = api_key
-    from_email = "noreply@fortunecity.in"
+    from_email = "noreply@mail.fortunecity.in"
     to_email = "social@texvalley.info"
     
     try:
@@ -571,7 +571,7 @@ def send_event_notification_to_subscribers(event_id: int, is_update: bool = Fals
             return
             
         resend.api_key = api_key
-        from_email = "noreply@fortunecity.in"
+        from_email = "noreply@mail.fortunecity.in"
         base_url = "https://fortunecity.in"
         
         # Format Date and Time
