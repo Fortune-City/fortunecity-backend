@@ -496,8 +496,19 @@ def send_subscriber_welcome_email(email_address: str, name: str = None):
             "html": html_content,
         }
         
-        email = resend.Emails.send(params)
-        logger.info(f"Welcome email sent to {email_address}. ID: {email.get('id')}")
+        max_retries = 3
+        import time
+        for attempt in range(max_retries):
+            try:
+                email = resend.Emails.send(params)
+                logger.info(f"Welcome email sent to {email_address}. ID: {email.get('id')}")
+                break
+            except Exception as e:
+                if attempt == max_retries - 1:
+                    raise e
+                wait_time = (2 ** attempt) + 0.5
+                logger.warning(f"Error sending welcome email (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
+                time.sleep(wait_time)
         
     except Exception as e:
         logger.error(f"Failed to send welcome email to {email_address}: {str(e)}")
@@ -532,8 +543,19 @@ def send_enquiry_email(data: dict):
             "html": html_content,
         }
         
-        email = resend.Emails.send(params)
-        logger.info(f"Enquiry email sent successfully. ID: {email.get('id')}")
+        max_retries = 3
+        import time
+        for attempt in range(max_retries):
+            try:
+                email = resend.Emails.send(params)
+                logger.info(f"Enquiry email sent successfully. ID: {email.get('id')}")
+                break
+            except Exception as e:
+                if attempt == max_retries - 1:
+                    raise e
+                wait_time = (2 ** attempt) + 0.5
+                logger.warning(f"Error sending enquiry email (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
+                time.sleep(wait_time)
         
     except Exception as e:
         logger.error(f"Failed to send enquiry email via Resend: {str(e)}")
@@ -588,8 +610,14 @@ def send_event_notification_to_subscribers(event_id: int, is_update: bool = Fals
         subject = f"New Event: {event.title}" if not is_update else f"Event Updated: {event.title}"
         header_text = "New Event" if not is_update else "Event Updated"
 
-        for sub in subscribers:
-            try:
+        # Batch send using resend.Batch.send in chunks of 100
+        batch_size = 100
+        import time
+        for i in range(0, len(subscribers), batch_size):
+            chunk = subscribers[i:i + batch_size]
+            batch_payload = []
+            
+            for sub in chunk:
                 display_name = sub.name if sub.name else "Subscriber"
                 html_content = f"""
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 0; border-radius: 8px; overflow: hidden;">
@@ -625,14 +653,30 @@ def send_event_notification_to_subscribers(event_id: int, is_update: bool = Fals
                 </div>
                 """
                 
-                resend.Emails.send({
+                batch_payload.append({
                     "from": f"Fortune City <{from_email}>",
                     "to": [sub.email],
                     "subject": subject,
-                    "html": html_content,
+                    "html": html_content
                 })
-            except Exception as e:
-                logger.error(f"Failed to send event notification to {sub.email}: {str(e)}")
+            
+            # Send the batch with retries for transient errors
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    resend.Batch.send(batch_payload)
+                    logger.info(f"Successfully sent event notification batch (size {len(batch_payload)}) starting at index {i}.")
+                    break
+                except Exception as e:
+                    if attempt == max_retries - 1:
+                        logger.error(f"Failed to send event notification batch starting at index {i} after {max_retries} attempts: {str(e)}")
+                    else:
+                        wait_time = (2 ** attempt) + 0.5
+                        logger.warning(f"Error sending batch starting at index {i} (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
+                        time.sleep(wait_time)
+            
+            # Rate limit politeness buffer
+            time.sleep(0.5)
                 
         logger.info(f"Event notification blast sent for event ID {event_id} ({'Update' if is_update else 'New'}) to {len(subscribers)} subscribers.")
         
