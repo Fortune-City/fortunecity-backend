@@ -677,13 +677,14 @@ def send_event_notification_to_subscribers(event_id: int, is_update: bool = Fals
     finally:
         db.close()
 
-def trigger_google_sheet_webhook(data: dict):
-    webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
+def trigger_google_sheet_webhook(data: dict, webhook_url: str = None):
     if not webhook_url:
-        logger.warning("GOOGLE_SHEET_WEBHOOK_URL not found in environment")
+        webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
+    if not webhook_url:
+        logger.warning("Google Sheet Webhook URL not found in environment")
         return
     
-    logger.info(f"Attempting to send enquiry to Google Sheet: {webhook_url}")
+    logger.info(f"Attempting to send data to Google Sheet: {webhook_url}")
     try:
         # Use json data
         json_data = json.dumps(data).encode("utf-8")
@@ -709,7 +710,7 @@ def trigger_google_sheet_webhook(data: dict):
             logger.debug(f"Google Sheet Response Body: {body}")
             
     except Exception as e:
-        logger.error(f"Failed to send enquiry to Google Sheet: {str(e)}")
+        logger.error(f"Failed to send data to Google Sheet: {str(e)}")
         logger.error(traceback.format_exc())
 
 @app.post("/contact", response_model=schemas.ContactEnquiryResponse, status_code=status.HTTP_201_CREATED)
@@ -1753,6 +1754,14 @@ def delete_registration(registration_id: int, current_user: models.User = Depend
     db.delete(reg)
     db.commit()
     return None
+
+@app.post("/summer-carnival/register", status_code=status.HTTP_200_OK)
+def register_summer_carnival(registration_data: dict, background_tasks: BackgroundTasks):
+    """Register for the Summer Carnival and save to Google Sheet only, bypassing PostgreSQL."""
+    registration_data["date"] = datetime.now().isoformat()
+    webhook_url = os.getenv("SUMMER_CARNIVAL_WEBHOOK_URL")
+    background_tasks.add_task(trigger_google_sheet_webhook, registration_data, webhook_url)
+    return {"status": "success", "message": "Autofilled in Google Sheet"}
 
 @app.get("/admin/stats", response_model=schemas.DashboardStats)
 def get_dashboard_stats(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
