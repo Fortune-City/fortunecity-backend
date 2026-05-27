@@ -707,7 +707,7 @@ def trigger_google_sheet_webhook(data: dict, webhook_url: str = None):
             status = response.getcode()
             body = response.read().decode("utf-8")
             logger.info(f"Google Sheet Response Status: {status}")
-            logger.debug(f"Google Sheet Response Body: {body}")
+            logger.info(f"Google Sheet Response Body: {body}")
             
     except Exception as e:
         logger.error(f"Failed to send data to Google Sheet: {str(e)}")
@@ -1762,6 +1762,19 @@ def register_summer_carnival(registration_data: dict, background_tasks: Backgrou
     webhook_url = os.getenv("SUMMER_CARNIVAL_WEBHOOK_URL")
     background_tasks.add_task(trigger_google_sheet_webhook, registration_data, webhook_url)
     return {"status": "success", "message": "Autofilled in Google Sheet"}
+
+@app.post("/business-enquiry/submit", status_code=status.HTTP_200_OK)
+def submit_business_enquiry(enquiry_data: dict, background_tasks: BackgroundTasks):
+    """Submit a business enquiry and save to Google Sheet, bypassing PostgreSQL."""
+    enquiry_data["date"] = datetime.now().isoformat()
+    webhook_url = os.getenv("BUSINESS_ENQUIRY_WEBHOOK_URL")
+    
+    # Smart fallback to primary GOOGLE_SHEET_WEBHOOK_URL if specific is not configured or placeholder
+    if not webhook_url or "PLACEHOLDER" in webhook_url:
+        webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
+        
+    background_tasks.add_task(trigger_google_sheet_webhook, enquiry_data, webhook_url)
+    return {"status": "success", "message": "Enquiry submitted to Google Sheet"}
 
 @app.get("/admin/stats", response_model=schemas.DashboardStats)
 def get_dashboard_stats(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
