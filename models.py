@@ -199,3 +199,16 @@ class Movie(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     theater = relationship("Theater", back_populates="movies")
+
+
+class CustomForm(Base):
+    __tablename__ = "custom_forms"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    slug = Column(String, unique=True, index=True)
+    description = Column(Text, nullable=True)
+    fields = Column(JSON, nullable=True, default=list) # List of dicts representing field objects
+    webhook_url = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+

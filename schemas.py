@@ -363,3 +363,23 @@ class MovieResponse(MovieBase):
     
     class Config:
         from_attributes = True
+
+
+# Custom Form Schemas
+class CustomFormBase(BaseModel):
+    title: str
+    slug: str
+    description: Optional[str] = None
+    fields: List[Dict[str, Any]] = []
+    webhook_url: Optional[str] = None
+
+class CustomFormCreate(CustomFormBase):
+    pass
+
+class CustomFormResponse(CustomFormBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+

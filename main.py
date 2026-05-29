@@ -678,27 +678,38 @@ def send_event_notification_to_subscribers(event_id: int, is_update: bool = Fals
         db.close()
 
 def trigger_google_sheet_webhook(data: dict, webhook_url: str = None):
+    import urllib.request
+    import urllib.parse
+    import json
+    import ssl
+    
     if not webhook_url:
         webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
     if not webhook_url:
         logger.warning("Google Sheet Webhook URL not found in environment")
         return
     
+    # Strip quotes if they were loaded with quotes
+    if webhook_url.startswith('"') and webhook_url.endswith('"'):
+        webhook_url = webhook_url[1:-1]
+    if webhook_url.startswith("'") and webhook_url.endswith("'"):
+        webhook_url = webhook_url[1:-1]
+    
     logger.info(f"Attempting to send data to Google Sheet: {webhook_url}")
+    
+    # By default, we try sending as url-encoded form data first,
+    # which is expected by the vast majority of standard Apps Scripts (Custom Forms, Carnival, Business).
+    form_success = False
     try:
-        # Use json data
-        json_data = json.dumps(data).encode("utf-8")
-        
-        # Create a custom Opener to follow redirects automatically (which Google Apps Script does)
-        # and ignore SSL verify if needed
+        form_data = urllib.parse.urlencode(data).encode("utf-8")
         req = urllib.request.Request(
             webhook_url, 
-            data=json_data, 
-            headers={"Content-Type": "application/json"},
+            data=form_data, 
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
             method="POST"
         )
         
-        # ssl context to avoid证书 issues
+        # ssl context to avoid SSL issues
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
@@ -706,12 +717,44 @@ def trigger_google_sheet_webhook(data: dict, webhook_url: str = None):
         with urllib.request.urlopen(req, timeout=15, context=ctx) as response:
             status = response.getcode()
             body = response.read().decode("utf-8")
-            logger.info(f"Google Sheet Response Status: {status}")
-            logger.info(f"Google Sheet Response Body: {body}")
+            logger.info(f"Google Sheet (Form) Response Status: {status}")
+            logger.info(f"Google Sheet (Form) Response Body: {body}")
             
+            # Check if it was successful and did NOT return a JSON parsing error
+            if status == 200:
+                if "error" in body.lower() and ("syntax" in body.lower() or "json" in body.lower() or "unexpected token" in body.lower()):
+                    logger.warning("Google Sheet script reported a JSON parsing error. Form-encoded data was likely not parsed.")
+                else:
+                    form_success = True
+                    
     except Exception as e:
-        logger.error(f"Failed to send data to Google Sheet: {str(e)}")
-        logger.error(traceback.format_exc())
+        logger.warning(f"Failed to send form-encoded data to Google Sheet: {str(e)}")
+        
+    # If form-encoded failed or returned a JSON/Syntax error, retry/fallback to application/json
+    if not form_success:
+        logger.info("Retrying/falling back to application/json...")
+        try:
+            json_payload = json.dumps(data).encode("utf-8")
+            req = urllib.request.Request(
+                webhook_url,
+                data=json_payload,
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            
+            # ssl context to avoid SSL issues
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            
+            with urllib.request.urlopen(req, timeout=15, context=ctx) as response:
+                status = response.getcode()
+                body = response.read().decode("utf-8")
+                logger.info(f"Google Sheet (JSON) Response Status: {status}")
+                logger.info(f"Google Sheet (JSON) Response Body: {body}")
+        except Exception as e:
+            logger.error(f"Failed to send JSON payload to Google Sheet: {str(e)}")
+            logger.error(traceback.format_exc())
 
 @app.post("/contact", response_model=schemas.ContactEnquiryResponse, status_code=status.HTTP_201_CREATED)
 def create_contact_enquiry(enquiry: schemas.ContactEnquiryCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
@@ -1989,6 +2032,101 @@ def seed_theaters(db: Session):
             db.add(new_t)
     db.commit()
 
+
+# --- Custom Forms API ---
+
+@app.post("/custom-forms", response_model=schemas.CustomFormResponse)
+def create_or_update_custom_form(
+    form_data: schemas.CustomFormCreate,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Create or update a custom form (restricted to admin)."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    existing_form = db.query(models.CustomForm).filter(models.CustomForm.slug == form_data.slug).first()
+    
+    if existing_form:
+        existing_form.title = form_data.title
+        existing_form.description = form_data.description
+        existing_form.fields = form_data.fields
+        existing_form.webhook_url = form_data.webhook_url
+        db.commit()
+        db.refresh(existing_form)
+        return existing_form
+    else:
+        new_form = models.CustomForm(
+            title=form_data.title,
+            slug=form_data.slug,
+            description=form_data.description,
+            fields=form_data.fields,
+            webhook_url=form_data.webhook_url
+        )
+        db.add(new_form)
+        db.commit()
+        db.refresh(new_form)
+        return new_form
+
+@app.get("/custom-forms", response_model=List[schemas.CustomFormResponse])
+def get_custom_forms(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """List all custom forms (restricted to admin)."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return db.query(models.CustomForm).order_by(models.CustomForm.created_at.desc()).all()
+
+@app.get("/custom-forms/public/{slug}", response_model=schemas.CustomFormResponse)
+def get_custom_form_by_slug(slug: str, db: Session = Depends(get_db)):
+    """Fetch a single custom form by slug (public endpoint for frontend)."""
+    form = db.query(models.CustomForm).filter(models.CustomForm.slug == slug).first()
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+    return form
+
+@app.post("/custom-forms/public/{slug}/submit")
+def submit_custom_form(
+    slug: str,
+    submission_data: dict,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    """Handle custom form submissions from the frontend (public endpoint)."""
+    form = db.query(models.CustomForm).filter(models.CustomForm.slug == slug).first()
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+    
+    logger.info(f"Custom form submission for '{form.title}' (slug: {slug}): {submission_data}")
+    
+    # Forward the submission to Google Sheets using the form's custom webhook URL,
+    # falling back to the default GOOGLE_SHEET_WEBHOOK_URL from environment
+    webhook_url = form.webhook_url or os.getenv("GOOGLE_SHEET_WEBHOOK_URL")
+    if webhook_url:
+        background_tasks.add_task(trigger_google_sheet_webhook, submission_data, webhook_url)
+        
+    return {"message": "Form submitted successfully!", "title": form.title}
+
+@app.delete("/custom-forms/{form_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_custom_form(
+    form_id: int,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Delete a custom form by ID (restricted to admin)."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    form = db.query(models.CustomForm).filter(models.CustomForm.id == form_id).first()
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+    
+    db.delete(form)
+    db.commit()
+    return None
+
+
 @app.on_event("startup")
 async def startup_event():
     db = next(get_db())
@@ -1997,3 +2135,4 @@ async def startup_event():
         logger.info("Theaters seeded successfully.")
     finally:
         db.close()
+
