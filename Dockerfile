@@ -28,4 +28,5 @@ COPY . .
 EXPOSE 8000
 
 # Run the application
+# Dummy change to trigger build/update
 CMD ["python", "production_run.py"]
