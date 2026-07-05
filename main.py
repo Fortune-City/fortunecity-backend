@@ -1798,14 +1798,6 @@ def delete_registration(registration_id: int, current_user: models.User = Depend
     db.commit()
     return None
 
-@app.post("/summer-carnival/register", status_code=status.HTTP_200_OK)
-def register_summer_carnival(registration_data: dict, background_tasks: BackgroundTasks):
-    """Register for the Summer Carnival and save to Google Sheet only, bypassing PostgreSQL."""
-    registration_data["date"] = datetime.now().isoformat()
-    webhook_url = os.getenv("SUMMER_CARNIVAL_WEBHOOK_URL")
-    background_tasks.add_task(trigger_google_sheet_webhook, registration_data, webhook_url)
-    return {"status": "success", "message": "Autofilled in Google Sheet"}
-
 @app.post("/business-enquiry/submit", status_code=status.HTTP_200_OK)
 def submit_business_enquiry(enquiry_data: dict, background_tasks: BackgroundTasks):
     """Submit a business enquiry and save to Google Sheet, bypassing PostgreSQL."""
