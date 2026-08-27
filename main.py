@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Form, File, UploadFile, BackgroundTasks
+from fastapi import FastAPI, Depends, HTTPException, status, Form, File, UploadFile, BackgroundTasks, Response
 from typing import Optional, List, Union
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
@@ -976,14 +976,29 @@ from fastapi import Response
 @app.get("/sitemap.xml")
 def get_sitemap(db: Session = Depends(get_db)):
     """Generate dynamic sitemap.xml"""
-    base_url = "https://fortunemill.com" # Update this with your actual domain
+    base_url = os.getenv("SITE_URL", "https://www.fortunecity.in")
     
     # Static pages
     static_pages = [
         {"loc": f"{base_url}/", "changefreq": "daily", "priority": "1.0"},
         {"loc": f"{base_url}/about", "changefreq": "monthly", "priority": "0.8"},
         {"loc": f"{base_url}/contact", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/business-enquiry", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/events", "changefreq": "daily", "priority": "0.9"},
         {"loc": f"{base_url}/blog", "changefreq": "daily", "priority": "0.9"},
+        {"loc": f"{base_url}/gallery/photos", "changefreq": "weekly", "priority": "0.7"},
+        {"loc": f"{base_url}/gallery/videos", "changefreq": "weekly", "priority": "0.7"},
+        {"loc": f"{base_url}/explore/avenue-malls", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": f"{base_url}/explore/texvalley", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": f"{base_url}/explore/food-valley", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": f"{base_url}/explore/fortune-multiplex", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": f"{base_url}/explore/fortune-multiplex/show-times", "changefreq": "daily", "priority": "0.8"},
+        {"loc": f"{base_url}/explore/sports-valley", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/explore/ev-charging-station", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/explore/retail-arcade-and-co-living", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/explore/fortune-wedding-mahal", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": f"{base_url}/privacy-policy", "changefreq": "yearly", "priority": "0.4"},
+        {"loc": f"{base_url}/terms-and-conditions", "changefreq": "yearly", "priority": "0.4"},
     ]
     
     xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1000,12 +1015,13 @@ def get_sitemap(db: Session = Depends(get_db)):
     # Add blog posts
     posts = db.query(models.BlogPost).filter(models.BlogPost.status == 'published').all()
     for post in posts:
-        last_mod = post.created_at.strftime("%Y-%m-%d")
+        post_date = post.updated_at or post.created_at or datetime.utcnow()
+        last_mod = post_date.strftime("%Y-%m-%d")
         xml_content += '  <url>\n'
         xml_content += f'    <loc>{base_url}/blog/{post.slug}</loc>\n'
         xml_content += f'    <lastmod>{last_mod}</lastmod>\n'
         xml_content += '    <changefreq>weekly</changefreq>\n'
-        xml_content += '    <priority>0.7</priority>\n'
+        xml_content += '    <priority>0.8</priority>\n'
         xml_content += '  </url>\n'
         
     xml_content += '</urlset>'
@@ -2117,6 +2133,85 @@ def delete_custom_form(
     db.delete(form)
     db.commit()
     return None
+
+
+@app.get("/sitemap.xml", response_class=Response)
+def get_sitemap_xml(db: Session = Depends(get_db)):
+    """Generate dynamic real-time XML sitemap for all published blog posts, events, and core pages."""
+    site_url = "https://www.fortunecity.in"
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    core_pages = [
+        {"loc": "/", "changefreq": "daily", "priority": "1.0"},
+        {"loc": "/about", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/events", "changefreq": "daily", "priority": "0.9"},
+        {"loc": "/contact", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/business-enquiry", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/blog", "changefreq": "daily", "priority": "0.9"},
+        {"loc": "/explore/avenue-malls", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": "/explore/texvalley", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": "/explore/food-valley", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": "/explore/fortune-multiplex", "changefreq": "monthly", "priority": "0.9"},
+        {"loc": "/explore/fortune-multiplex/show-times", "changefreq": "daily", "priority": "0.8"},
+        {"loc": "/explore/sports-valley", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/explore/ev-charging-station", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/explore/retail-arcade-and-co-living", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/explore/fortune-wedding-mahal", "changefreq": "monthly", "priority": "0.8"},
+        {"loc": "/gallery/photos", "changefreq": "weekly", "priority": "0.7"},
+        {"loc": "/gallery/videos", "changefreq": "weekly", "priority": "0.7"},
+        {"loc": "/privacy-policy", "changefreq": "yearly", "priority": "0.4"},
+        {"loc": "/terms-and-conditions", "changefreq": "yearly", "priority": "0.4"}
+    ]
+    
+    posts = db.query(models.BlogPost).filter(models.BlogPost.status == "published").all()
+    events = db.query(models.Event).all()
+    
+    xml_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        '  <!-- Core Pages -->'
+    ]
+    
+    for page in core_pages:
+        xml_lines.extend([
+            '  <url>',
+            f'    <loc>{site_url}{page["loc"]}</loc>',
+            f'    <lastmod>{today}</lastmod>',
+            f'    <changefreq>{page["changefreq"]}</changefreq>',
+            f'    <priority>{page["priority"]}</priority>',
+            '  </url>'
+        ])
+        
+    xml_lines.append(f'  <!-- Blog Posts ({len(posts)} Posts) -->')
+    for post in posts:
+        if post.slug:
+            last_mod = (post.updated_at or post.created_at or datetime.utcnow()).strftime("%Y-%m-%d")
+            xml_lines.extend([
+                '  <url>',
+                f'    <loc>{site_url}/blog/{post.slug}</loc>',
+                f'    <lastmod>{last_mod}</lastmod>',
+                '    <changefreq>weekly</changefreq>',
+                '    <priority>0.8</priority>',
+                '  </url>'
+            ])
+            
+    xml_lines.append(f'  <!-- Events ({len(events)} Events) -->')
+    for ev in events:
+        if ev.slug:
+            last_mod = (ev.updated_at or ev.created_at or datetime.utcnow()).strftime("%Y-%m-%d")
+            xml_lines.extend([
+                '  <url>',
+                f'    <loc>{site_url}/events/{ev.slug}</loc>',
+                f'    <lastmod>{last_mod}</lastmod>',
+                '    <changefreq>weekly</changefreq>',
+                '    <priority>0.8</priority>',
+                '  </url>'
+            ])
+            
+    xml_lines.append('</urlset>')
+    
+    return Response(content="\\n".join(xml_lines), media_type="application/xml")
+
 
 
 @app.on_event("startup")
